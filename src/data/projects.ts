@@ -13,6 +13,10 @@ export type Project = {
   tags: string[];
   image: string;
   featured?: boolean;
+  /** Optional GitHub repo link — renders a clickable "View on GitHub" overlay on the card */
+  github?: string;
+  /** Optional live/demo URL */
+  live?: string;
 };
 
 export const projects: Project[] = [
@@ -107,24 +111,41 @@ export const projects: Project[] = [
 
   // --- Software & Maker ---
   {
-    id: '3dprinthub',
-    title: '3DPrintHub',
+    id: 'tokenjar',
+    title: 'TokenJar — ESP32 API Usage Gadget',
     category: 'Software & Maker',
     date: 'Personal Project',
+    context: 'Hardware + Firmware',
     description:
-      'Marketplace platform connecting hobbyists and print farms. STL auto-pricing, listings, and order flow built on Firebase.',
-    tags: ['Firebase', 'Web', 'STL Parsing', 'Marketplace'],
-    image: '3dprinthub.jpg',
+      'Desk gadget on an ESP32-S3 SuperMini that shows real-time Anthropic and OpenAI API spend on a 2" ST7789 IPS LCD. EC11 encoder UI, 24-hour sparkline, budget bar, and direct calls to each platform\u2019s Admin API — built with PlatformIO and custom display rendering.',
+    tags: ['ESP32-S3', 'C++', 'PlatformIO', 'SPI Display', 'REST API'],
+    image: 'tokenjar.jpg',
+    github: 'https://github.com/Zhaor3/tokenjar',
+    featured: true,
   },
   {
-    id: 'rxzlabs',
-    title: 'RXZLabs',
+    id: 'daytradeagents',
+    title: 'DayTradeAgents — Multi-Agent LLM Framework',
     category: 'Software & Maker',
-    date: 'Ongoing',
+    date: 'Personal Project',
+    context: 'AI / System Design',
     description:
-      'Etsy store for 3D-printed products. Covers design, production, listings, and fulfillment end-to-end.',
-    tags: ['3D Printing', 'Product Design', 'E-commerce'],
-    image: 'rxzlabs.jpg',
+      'Trading-research framework where 11 specialized LLM agents debate, challenge, and stress-test every trade through a 6-phase pipeline (data → analyst team → bull/bear debate → trader → risk stress-test → portfolio manager). Delivers a full trade dashboard and price-prediction chart to Telegram.',
+    tags: ['Python', 'Claude', 'GPT-5', 'Multi-Agent', 'Telegram'],
+    image: 'daytradeagents.jpg',
+    github: 'https://github.com/Zhaor3/DayTradeAgents',
+  },
+  {
+    id: 'geoagent',
+    title: 'GeoAgent — Image Geolocation Pipeline',
+    category: 'Software & Maker',
+    date: 'Personal Project',
+    context: 'AI / Vision',
+    description:
+      'Determines where a photo was taken using a 6-stage pipeline: EXIF extraction, two-pass visual analysis with extended thinking, hypothesis generation, self-verification, external tool verification (Google Places, reverse geocoding), and final scoring. CLI plus Telegram bot.',
+    tags: ['Python', 'Claude Vision', 'Computer Vision', 'Reasoning'],
+    image: 'geoagent.jpg',
+    github: 'https://github.com/Zhaor3/GeoAgent',
   },
   {
     id: 'voron-3d-printers',

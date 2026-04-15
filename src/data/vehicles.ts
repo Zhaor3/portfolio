@@ -45,11 +45,4 @@ export const vehicles: Vehicle[] = [
     notes: 'Performance and handling upgrades.',
     image: 'brz.jpg',
   },
-  {
-    id: 'model-x',
-    name: 'Tesla Model X Plaid',
-    period: 'Daily',
-    notes: 'Daily driver.',
-    image: 'model-x.jpg',
-  },
 ];

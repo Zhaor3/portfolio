@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, Linkedin, Youtube, Instagram, ArrowUpRight } from 'lucide-react';
+import { Mail, Phone, Linkedin, Github, Instagram, ArrowUpRight } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 
 const channels = [
@@ -24,10 +24,10 @@ const channels = [
     Icon: Linkedin,
   },
   {
-    label: 'YouTube',
-    value: '@SimonZhaor',
-    href: 'https://www.youtube.com/@SimonZhaor',
-    Icon: Youtube,
+    label: 'GitHub',
+    value: '@Zhaor3',
+    href: 'https://github.com/Zhaor3',
+    Icon: Github,
   },
   {
     label: 'Instagram',

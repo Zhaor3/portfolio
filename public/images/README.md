@@ -18,8 +18,9 @@ Drop project/vehicle/profile photos here. Missing files fall back to stylized gr
 - `beamng-ros2.jpg` — BeamNG + ROS 2 screenshot
 - `leaf-vacuum.jpg` — leaf vacuum robot (IED)
 - `heartbeat-sensor.jpg` — analog circuit photo/schematic
-- `3dprinthub.jpg` — 3DPrintHub marketplace screenshot
-- `rxzlabs.jpg` — RXZLabs Etsy store shot
+- `tokenjar.jpg` — TokenJar ESP32 gadget (hero shot from GitHub repo)
+- `daytradeagents.jpg` — DayTradeAgents dashboard / pipeline diagram
+- `geoagent.jpg` — GeoAgent sample result screenshot
 - `voron.jpg` — Voron printer
 
 ### Vehicle Builds (16:10 or 3:2)
@@ -28,7 +29,6 @@ Drop project/vehicle/profile photos here. Missing files fall back to stylized gr
 - `s500-w140.jpg` — 1995 Mercedes S500 W140
 - `civic-type-r.jpg` — 2017 Honda Civic Type R
 - `brz.jpg` — 2013 Subaru BRZ Limited
-- `model-x.jpg` — Tesla Model X Plaid
 
 ## Also drop
 - `public/resume.pdf` — your resume (linked from hero + About)
