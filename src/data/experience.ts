@@ -8,8 +8,11 @@ export type Experience = {
   skills?: string[];
 };
 
-// Ordered reverse-chronological: ongoing roles first (most recent start wins
-// the tiebreak), then completed roles sorted by end date descending.
+// Manually ordered to surface the roles that matter most to recruiters first:
+//   1. current research role (XAL)
+//   2. Tesla internship (featured — highest-signal completed role)
+//   3. other ongoing roles (RSAS)
+//   4. other completed roles (Formula SAE)
 export const experience: Experience[] = [
   {
     role: 'Undergraduate Research Assistant',
@@ -37,6 +40,21 @@ export const experience: Experience[] = [
     ],
   },
   {
+    role: 'Engineering Department Intern',
+    company: 'Tesla',
+    location: 'Remote (China)',
+    date: 'Jul 2025 – Aug 2025',
+    summary:
+      'Reverse-engineered the Tesla Model 3 battery pack coolant distribution manifold and produced CAD redesigns, plus an integrated mounting bracket for autonomous driving sensors.',
+    details: [
+      'Analyzed manufacturing process and potential failure modes and delivered an optimization assessment report.',
+      'Created refined 3D CAD models of the coolant manifold for enhanced thermal dissipation efficiency; produced design documentation and renderings.',
+      'Conducted simulation analysis on the improved manifold to validate thermal performance.',
+      'Designed an integrated mounting bracket and cover for Tesla autonomous driving sensors, with a major focus on manufacturability and assembly efficiency.',
+    ],
+    skills: ['Siemens NX', 'CAD', 'Thermal Simulation', 'DFM', 'Mechanical Engineering'],
+  },
+  {
     role: 'Shop Manager',
     company: 'Rensselaer Student Auto Shop (RSAS)',
     location: 'Troy, NY',
@@ -61,20 +79,5 @@ export const experience: Experience[] = [
       'Helped design and develop an actuator system focused on battery cooling.',
     ],
     skills: ['CAD', 'FSAE', 'Fabrication', 'Vehicle Design'],
-  },
-  {
-    role: 'Engineering Department Intern',
-    company: 'Tesla',
-    location: 'Remote (China)',
-    date: 'Jul 2025 – Aug 2025',
-    summary:
-      'Reverse-engineered the Tesla Model 3 battery pack coolant distribution manifold and produced CAD redesigns, plus an integrated mounting bracket for autonomous driving sensors.',
-    details: [
-      'Analyzed manufacturing process and potential failure modes and delivered an optimization assessment report.',
-      'Created refined 3D CAD models of the coolant manifold for enhanced thermal dissipation efficiency; produced design documentation and renderings.',
-      'Conducted simulation analysis on the improved manifold to validate thermal performance.',
-      'Designed an integrated mounting bracket and cover for Tesla autonomous driving sensors, with a major focus on manufacturability and assembly efficiency.',
-    ],
-    skills: ['Siemens NX', 'CAD', 'Thermal Simulation', 'DFM', 'Mechanical Engineering'],
   },
 ];

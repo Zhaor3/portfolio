@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Briefcase, MapPin } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 import { experience } from '@/data/experience';
-import { reveal, stagger } from '@/lib/motion';
+import { fadeUp, stagger } from '@/lib/motion';
 
 export default function Experience() {
   return (
@@ -25,7 +25,7 @@ export default function Experience() {
           {experience.map((exp, i) => (
             <motion.article
               key={`${exp.company}-${exp.role}`}
-              {...reveal({ delay: stagger(i), amount: 0.25 })}
+              {...fadeUp({ delay: stagger(i), amount: 0.25 })}
               className="relative pl-12 md:pl-16"
             >
               {/* Dot */}

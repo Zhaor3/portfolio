@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import SectionHeader from './SectionHeader';
 import PlaceholderImage from './PlaceholderImage';
 import { vehicles } from '@/data/vehicles';
-import { reveal, stagger } from '@/lib/motion';
+import { fadeUp, stagger } from '@/lib/motion';
 
 export default function VehicleBuilds() {
   return (
@@ -19,7 +19,7 @@ export default function VehicleBuilds() {
         {vehicles.map((v, i) => (
           <motion.figure
             key={v.id}
-            {...reveal({ delay: stagger(i), amount: 0.2 })}
+            {...fadeUp({ delay: stagger(i), amount: 0.2 })}
             whileHover={{ y: -4 }}
             className="group glass rounded-3xl overflow-hidden hover:border-black/15 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.18)] transition-all"
           >
