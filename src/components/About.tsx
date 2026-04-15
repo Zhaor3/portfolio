@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Download } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 import { featuredSkills, skillGroups } from '@/data/skills';
+import { withBase } from '@/lib/paths';
 
 const bio = [
   'I am a Mechanical Engineering student at Rensselaer Polytechnic Institute and an incoming M.S. in Robotics student at the University of Michigan, with interests in robotics, autonomous vehicles, control systems, and product development.',
@@ -35,7 +36,7 @@ export default function About() {
           ))}
           <div className="pt-4">
             <a
-              href="/resume.pdf"
+              href={withBase('/resume.pdf')}
               target="_blank"
               rel="noopener"
               className="inline-flex items-center gap-2 text-sm font-medium text-[#1d1d1f] hover:gap-3 transition-all"

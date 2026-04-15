@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight, Download } from 'lucide-react';
+import { withBase } from '@/lib/paths';
 
 export default function Hero() {
   return (
@@ -76,7 +77,7 @@ export default function Hero() {
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
           </a>
           <a
-            href="/resume.pdf"
+            href={withBase('/resume.pdf')}
             target="_blank"
             rel="noopener"
             className="group w-full sm:w-auto btn-ghost px-7 py-3.5 rounded-full font-medium flex items-center justify-center gap-2 min-w-[180px]"
