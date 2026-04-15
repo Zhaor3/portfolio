@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import SectionHeader from './SectionHeader';
 import PlaceholderImage from './PlaceholderImage';
 import { vehicles } from '@/data/vehicles';
+import { reveal, stagger } from '@/lib/motion';
 
 export default function VehicleBuilds() {
   return (
@@ -18,14 +19,7 @@ export default function VehicleBuilds() {
         {vehicles.map((v, i) => (
           <motion.figure
             key={v.id}
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{
-              duration: 0.7,
-              delay: Math.min(i * 0.06, 0.3),
-              ease: [0.16, 1, 0.3, 1],
-            }}
+            {...reveal({ delay: stagger(i), amount: 0.2 })}
             whileHover={{ y: -4 }}
             className="group glass rounded-3xl overflow-hidden hover:border-black/15 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.18)] transition-all"
           >

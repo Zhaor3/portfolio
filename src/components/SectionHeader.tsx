@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { reveal } from '@/lib/motion';
 
 type Props = {
   eyebrow?: string;
@@ -17,10 +18,7 @@ export default function SectionHeader({
 }: Props) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.5 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      {...reveal({ amount: 0.5 })}
       className={`mb-14 md:mb-16 ${align === 'center' ? 'text-center' : 'text-left'}`}
     >
       {eyebrow && (

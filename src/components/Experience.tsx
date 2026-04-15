@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Briefcase, MapPin } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 import { experience } from '@/data/experience';
+import { reveal, stagger } from '@/lib/motion';
 
 export default function Experience() {
   return (
@@ -24,10 +25,7 @@ export default function Experience() {
           {experience.map((exp, i) => (
             <motion.article
               key={`${exp.company}-${exp.role}`}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              {...reveal({ delay: stagger(i), amount: 0.25 })}
               className="relative pl-12 md:pl-16"
             >
               {/* Dot */}

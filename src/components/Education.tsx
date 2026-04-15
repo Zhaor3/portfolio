@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { GraduationCap, MapPin } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 import { education } from '@/data/education';
+import { reveal, stagger } from '@/lib/motion';
 
 export default function Education() {
   return (
@@ -14,10 +15,7 @@ export default function Education() {
         {education.map((edu, i) => (
           <motion.article
             key={edu.school}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            {...reveal({ delay: stagger(i), amount: 0.3 })}
             className="glass rounded-3xl p-6 md:p-8 hover:border-black/15 hover:shadow-[0_20px_60px_-25px_rgba(0,0,0,0.15)] transition-all"
           >
             <div className="flex items-start gap-5">

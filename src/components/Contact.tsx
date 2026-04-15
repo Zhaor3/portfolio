@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Mail, Phone, Linkedin, Github, Instagram, ArrowUpRight } from 'lucide-react';
 import SectionHeader from './SectionHeader';
+import { reveal } from '@/lib/motion';
 
 const channels = [
   {
@@ -47,10 +48,7 @@ export default function Contact() {
       />
 
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        {...reveal({ amount: 0.3 })}
         className="glass rounded-3xl p-6 md:p-10"
       >
         <div className="grid sm:grid-cols-2 gap-3">

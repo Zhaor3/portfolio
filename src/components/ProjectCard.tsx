@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, Github } from 'lucide-react';
 import PlaceholderImage from './PlaceholderImage';
 import type { Project } from '@/data/projects';
+import { reveal, stagger } from '@/lib/motion';
 
 type Props = {
   project: Project;
@@ -71,14 +72,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
     'group relative glass rounded-3xl overflow-hidden hover:border-black/15 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.18)] transition-all h-full flex flex-col';
 
   const motionProps = {
-    initial: { opacity: 0, y: 32 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
-    transition: {
-      duration: 0.7,
-      delay: Math.min(index * 0.06, 0.3),
-      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-    },
+    ...reveal({ delay: stagger(index), amount: 0.2 }),
     whileHover: { y: -6 },
   };
 

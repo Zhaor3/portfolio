@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import SectionHeader from './SectionHeader';
 import ProjectCard from './ProjectCard';
 import { projects, projectCategories } from '@/data/projects';
+import { fadeUp } from '@/lib/motion';
 
 export default function Projects() {
   return (
@@ -22,10 +23,7 @@ export default function Projects() {
             <div key={category}>
               {/* Category header with counter */}
               <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                {...fadeUp({ amount: 0.5, y: 16, duration: 0.6 })}
                 className="flex items-center gap-4 mb-8"
               >
                 <h3 className="text-sm md:text-base font-semibold tracking-[0.05em] uppercase text-[#1d1d1f]">

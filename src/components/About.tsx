@@ -5,6 +5,7 @@ import { Download } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 import { featuredSkills, skillGroups } from '@/data/skills';
 import { withBase } from '@/lib/paths';
+import { reveal } from '@/lib/motion';
 
 const bio = [
   'I am a Mechanical Engineering student at Rensselaer Polytechnic Institute and an incoming M.S. in Robotics student at the University of Michigan, with interests in robotics, autonomous vehicles, control systems, and product development.',
@@ -23,10 +24,7 @@ export default function About() {
       <div className="grid lg:grid-cols-5 gap-10 lg:gap-16">
         {/* Bio */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          {...reveal({ amount: 0.3 })}
           className="lg:col-span-3 space-y-5"
         >
           {bio.map((para, i) => (
@@ -50,10 +48,7 @@ export default function About() {
 
         {/* Featured skills */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          {...reveal({ delay: 0.15, amount: 0.3 })}
           className="lg:col-span-2"
         >
           <div className="glass rounded-3xl p-7">
@@ -77,10 +72,7 @@ export default function About() {
 
       {/* Full skills grid */}
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        {...reveal({ delay: 0.1, amount: 0.2 })}
         className="mt-20"
       >
         <p className="text-xs tracking-[0.3em] uppercase text-[#86868b] mb-8 text-center">
