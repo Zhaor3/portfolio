@@ -87,7 +87,13 @@ export const projects: Project[] = [
     description:
       'Senior capstone: a fully automated vertical magazine dispenser with escapement/indexer, lead screw lift, and NEMA 23 stepper actuation. End-to-end design, fabrication, and control.',
     tags: ['CAD', 'Mechatronics', 'Stepper Control', 'Capstone'],
-    images: ['capstone-dispenser.jpg'],
+    images: [
+      'capstone-dispenser/dashboard.png',
+      'capstone-dispenser/student-dispense.png',
+      'capstone-dispenser/staff-controls.png',
+      'capstone-dispenser/student-return.png',
+      'capstone-dispenser/worker-return.png',
+    ],
   },
   {
     id: 'beamng-ros2',
@@ -97,7 +103,11 @@ export const projects: Project[] = [
     description:
       'Implemented feedforward + PI speed controllers for a vehicle in BeamNG.tech using ROS 2. Used PlotJuggler for log analysis and controller tuning.',
     tags: ['ROS 2', 'Python', 'Control Systems', 'PlotJuggler'],
-    images: ['beamng-ros2.jpg'],
+    images: [
+      'beamng-ros2/hero.png',
+      'beamng-ros2/sim-plotjuggler.png',
+      'beamng-ros2/mpc-horizon.png',
+    ],
   },
   {
     id: 'leaf-vacuum',
@@ -118,7 +128,10 @@ export const projects: Project[] = [
     description:
       'Analog circuit with amplifiers and filters to detect heartbeats in the 60–180 bpm range. Signal conditioning and noise rejection from first principles.',
     tags: ['Analog Circuits', 'Signal Processing', 'Electronics'],
-    images: ['heartbeat-sensor.jpg'],
+    images: [
+      'heartbeat-sensor/hero.jpg',
+      'heartbeat-sensor/top-angle.jpg',
+    ],
   },
 
   // --- Software & Maker ---

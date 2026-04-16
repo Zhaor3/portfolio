@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import SectionHeader from './SectionHeader';
 import PlaceholderImage from './PlaceholderImage';
+import ImageCarousel from './ImageCarousel';
 import { vehicles } from '@/data/vehicles';
 import { fadeUp, stagger } from '@/lib/motion';
 
@@ -24,14 +25,22 @@ export default function VehicleBuilds() {
             className="group glass rounded-3xl overflow-hidden hover:border-black/15 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.18)] transition-all"
           >
             <div className="relative">
-              <PlaceholderImage
-                src={`/images/${v.image}`}
-                alt={v.name}
-                label={`placeholder · ${v.image}`}
-                className="aspect-[4/3] w-full"
-              />
+              {v.images.length > 1 ? (
+                <ImageCarousel
+                  images={v.images}
+                  alt={v.name}
+                  className="aspect-[4/3] w-full"
+                />
+              ) : (
+                <PlaceholderImage
+                  src={`/images/${v.images[0]}`}
+                  alt={v.name}
+                  label={`placeholder · ${v.images[0]}`}
+                  className="aspect-[4/3] w-full"
+                />
+              )}
               {v.current && (
-                <span className="absolute top-3 left-3 text-[10px] font-medium tracking-widest uppercase px-2 py-0.5 rounded-full bg-white/90 text-[#1d1d1f] border border-black/10 backdrop-blur-sm">
+                <span className="absolute top-3 left-3 z-10 text-[10px] font-medium tracking-widest uppercase px-2 py-0.5 rounded-full bg-white/90 text-[#1d1d1f] border border-black/10 backdrop-blur-sm">
                   Current
                 </span>
               )}
