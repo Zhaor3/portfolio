@@ -145,7 +145,11 @@ export const projects: Project[] = [
     description:
       'Desk gadget on an ESP32-S3 SuperMini that shows real-time Anthropic and OpenAI API spend on a 2" ST7789 IPS LCD. EC11 encoder UI, 24-hour sparkline, budget bar, and direct calls to each platform\u2019s Admin API — built with PlatformIO and custom display rendering.',
     tags: ['ESP32-S3', 'C++', 'PlatformIO', 'SPI Display', 'REST API'],
-    images: ['tokenjar.jpg'],
+    images: [
+      'tokenjar/screen-1.png',
+      'tokenjar/screen-2.png',
+      'tokenjar/screen-3.png',
+    ],
     github: 'https://github.com/Zhaor3/tokenjar',
     featured: true,
   },
@@ -169,7 +173,11 @@ export const projects: Project[] = [
     description:
       'Self-assembled two Vorons from scratch for high-speed, high-quality printing. Customized G-code, upgraded a Voron 2.4 with a carbon fiber gantry and metal components, and designed custom camera and LED mounts in CAD.',
     tags: ['Voron', 'G-code', 'CAD', 'Hardware'],
-    images: ['voron.jpg'],
+    images: [
+      'voron/voron-1.jpg',
+      'voron/voron-2.jpg',
+      'voron/voron-3.jpg',
+    ],
   },
   {
     id: 'daytradeagents',
@@ -180,7 +188,11 @@ export const projects: Project[] = [
     description:
       'Trading-research framework where 11 specialized LLM agents debate, challenge, and stress-test every trade through a 6-phase pipeline (data \u2192 analyst team \u2192 bull/bear debate \u2192 trader \u2192 risk stress-test \u2192 portfolio manager). Delivers a full trade dashboard and price-prediction chart to Telegram.',
     tags: ['Python', 'Claude', 'GPT-5', 'Multi-Agent', 'Telegram'],
-    images: ['daytradeagents.jpg'],
+    images: [
+      'daytradeagents/banner.png',
+      'daytradeagents/chart_preview.png',
+      'daytradeagents/telegram_demo.png',
+    ],
     github: 'https://github.com/Zhaor3/DayTradeAgents',
     featured: true,
   },
