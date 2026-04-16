@@ -146,9 +146,9 @@ export const projects: Project[] = [
       'Desk gadget on an ESP32-S3 SuperMini that shows real-time Anthropic and OpenAI API spend on a 2" ST7789 IPS LCD. EC11 encoder UI, 24-hour sparkline, budget bar, and direct calls to each platform\u2019s Admin API — built with PlatformIO and custom display rendering.',
     tags: ['ESP32-S3', 'C++', 'PlatformIO', 'SPI Display', 'REST API'],
     images: [
-      'tokenjar/screen-1.png',
-      'tokenjar/screen-2.png',
-      'tokenjar/screen-3.png',
+      'tokenjar/screen-1-processed.png',
+      'tokenjar/screen-2-processed.png',
+      'tokenjar/screen-3-processed.png',
     ],
     github: 'https://github.com/Zhaor3/tokenjar',
     featured: true,
@@ -162,7 +162,11 @@ export const projects: Project[] = [
     description:
       'Determines where a photo was taken using a 6-stage pipeline: EXIF extraction, two-pass visual analysis with extended thinking, hypothesis generation, self-verification, external tool verification (Google Places, reverse geocoding), and final scoring. CLI plus Telegram bot.',
     tags: ['Python', 'Claude Vision', 'Computer Vision', 'Reasoning'],
-    images: ['geoagent.jpg'],
+    images: [
+      'geoagent/cli-demo-processed.png',
+      'geoagent/pipeline-processed.png',
+      'geoagent/telegram-bot-demo-processed.png',
+    ],
     github: 'https://github.com/Zhaor3/GeoAgent',
   },
   {
@@ -191,7 +195,7 @@ export const projects: Project[] = [
     images: [
       'daytradeagents/banner.png',
       'daytradeagents/chart_preview.png',
-      'daytradeagents/telegram_demo.png',
+      'daytradeagents/telegram_demo-processed.png',
     ],
     github: 'https://github.com/Zhaor3/DayTradeAgents',
     featured: true,
