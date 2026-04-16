@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Lightbox from './Lightbox';
 
 type Props = {
   src: string;
@@ -24,6 +25,7 @@ type Props = {
  */
 export default function PlaceholderImage({ src, alt, label, className = '' }: Props) {
   const [failed, setFailed] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   // Track scroll progress from "element enters bottom of viewport" (0) to
@@ -54,8 +56,13 @@ export default function PlaceholderImage({ src, alt, label, className = '' }: Pr
           alt={alt}
           loading="lazy"
           onError={() => setFailed(true)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setLightboxOpen(true);
+          }}
           style={{ y, scale: 1.12 }}
-          className="absolute inset-0 h-full w-full object-cover will-change-transform"
+          className="absolute inset-0 h-full w-full object-cover cursor-zoom-in"
         />
       )}
       {failed && (
@@ -64,6 +71,16 @@ export default function PlaceholderImage({ src, alt, label, className = '' }: Pr
             {label ?? alt}
           </span>
         </div>
+      )}
+
+      {/* Full-screen lightbox */}
+      {!failed && (
+        <Lightbox
+          images={[src.replace(/^\/images\//, '')]}
+          alt={alt}
+          open={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+        />
       )}
     </div>
   );

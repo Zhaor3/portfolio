@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Lightbox from './Lightbox';
 
 type Props = {
   images: string[];
@@ -20,6 +21,7 @@ type Props = {
 export default function ImageCarousel({ images, alt, className = '' }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const count = images.length;
 
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -68,10 +70,15 @@ export default function ImageCarousel({ images, alt, className = '' }: Props) {
               alt={`${alt} — ${i + 1} of ${count}`}
               loading={i === 0 ? 'eager' : 'lazy'}
               draggable={false}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setLightboxOpen(true);
+              }}
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).style.display = 'none';
               }}
-              className="absolute inset-0 h-full w-full object-cover select-none"
+              className="absolute inset-0 h-full w-full object-cover select-none cursor-zoom-in"
             />
 
             {/* Placeholder text shown when image is missing */}
@@ -128,6 +135,15 @@ export default function ImageCarousel({ images, alt, className = '' }: Props) {
           <ChevronRight className="w-4 h-4" />
         </button>
       )}
+
+      {/* Full-screen lightbox */}
+      <Lightbox
+        images={images}
+        alt={alt}
+        startIndex={active}
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+      />
     </div>
   );
 }

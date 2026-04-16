@@ -108,6 +108,7 @@ export const projects: Project[] = [
       'beamng-ros2/sim-plotjuggler.png',
       'beamng-ros2/mpc-horizon.png',
     ],
+    featured: true,
   },
   {
     id: 'leaf-vacuum',
