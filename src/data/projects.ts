@@ -150,18 +150,6 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    id: 'daytradeagents',
-    title: 'DayTradeAgents — Multi-Agent LLM Framework',
-    category: 'Software & Maker',
-    date: 'Personal Project',
-    context: 'AI / System Design',
-    description:
-      'Trading-research framework where 11 specialized LLM agents debate, challenge, and stress-test every trade through a 6-phase pipeline (data \u2192 analyst team \u2192 bull/bear debate \u2192 trader \u2192 risk stress-test \u2192 portfolio manager). Delivers a full trade dashboard and price-prediction chart to Telegram.',
-    tags: ['Python', 'Claude', 'GPT-5', 'Multi-Agent', 'Telegram'],
-    images: ['daytradeagents.jpg'],
-    github: 'https://github.com/Zhaor3/DayTradeAgents',
-  },
-  {
     id: 'geoagent',
     title: 'GeoAgent — Image Geolocation Pipeline',
     category: 'Software & Maker',
@@ -182,6 +170,19 @@ export const projects: Project[] = [
       'Self-assembled two Vorons from scratch for high-speed, high-quality printing. Customized G-code, upgraded a Voron 2.4 with a carbon fiber gantry and metal components, and designed custom camera and LED mounts in CAD.',
     tags: ['Voron', 'G-code', 'CAD', 'Hardware'],
     images: ['voron.jpg'],
+  },
+  {
+    id: 'daytradeagents',
+    title: 'DayTradeAgents — Multi-Agent LLM Framework',
+    category: 'Software & Maker',
+    date: 'Personal Project',
+    context: 'AI / System Design',
+    description:
+      'Trading-research framework where 11 specialized LLM agents debate, challenge, and stress-test every trade through a 6-phase pipeline (data \u2192 analyst team \u2192 bull/bear debate \u2192 trader \u2192 risk stress-test \u2192 portfolio manager). Delivers a full trade dashboard and price-prediction chart to Telegram.',
+    tags: ['Python', 'Claude', 'GPT-5', 'Multi-Agent', 'Telegram'],
+    images: ['daytradeagents.jpg'],
+    github: 'https://github.com/Zhaor3/DayTradeAgents',
+    featured: true,
   },
 ];
 

@@ -24,8 +24,8 @@ export const vehicles: Vehicle[] = [
     notes:
       'Full overhaul: disassembly, cleaning, chassis repair, preparing for new paint.',
     images: [
-      'mx5-1993/flatbed-arrival.jpg',
       'mx5-1993/welding.jpg',
+      'mx5-1993/flatbed-arrival.jpg',
     ],
   },
   {
