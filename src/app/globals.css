@@ -141,6 +141,15 @@ body {
     color: var(--foreground-tertiary);
   }
 
+  /* Hide scrollbar — used by the image carousel's horizontal scroll track */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Soft highlight halo — used behind section headers for a quiet aura */
   .aura-halo {
     position: relative;

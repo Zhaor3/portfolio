@@ -11,7 +11,8 @@ export type Project = {
   context?: string;
   description: string;
   tags: string[];
-  image: string;
+  /** Ordered image paths relative to /public/images/. First image is the hero/showcase. */
+  images: string[];
   featured?: boolean;
   /** Optional GitHub repo link — renders a clickable "View on GitHub" overlay on the card */
   github?: string;
@@ -30,7 +31,12 @@ export const projects: Project[] = [
     description:
       'Brake-automation design for a Can-Am X3 supporting automated vehicle control and testing. Handles system design, actuation concepts, and practical integration for closed-loop control under slipping conditions.',
     tags: ['ROS 2', 'Python', 'Mechatronics', 'CAD', 'Vehicle Dynamics'],
-    image: 'canam-brake.jpg',
+    images: [
+      'canam-brake/hero.jpg',
+      'canam-brake/actuator-closeup.jpg',
+      'canam-brake/actuator-installed.jpg',
+      'canam-brake/pedal-mount.jpg',
+    ],
     featured: true,
   },
   {
@@ -42,7 +48,10 @@ export const projects: Project[] = [
     description:
       'Encoder-based wheel speed sensing system with embedded hardware integration for vehicle data acquisition. Ties into the broader autonomous stack on the Can-Am X3 platform.',
     tags: ['Embedded', 'Sensors', 'Data Acquisition', 'CAD'],
-    image: 'canam-wheel-speed.jpg',
+    images: [
+      'canam-wheel-speed/sensor-parts.jpg',
+      'canam-wheel-speed/installed.jpg',
+    ],
   },
   {
     id: 'robotic-arm-4dof',
@@ -53,7 +62,10 @@ export const projects: Project[] = [
     description:
       'Designed and built a 4-DOF robotic arm with focus on mechanical structure, motion, and actuator integration. Planned AI-powered camera for object detection and pick-and-place; integrated onto the Leaf Vacuum robot platform.',
     tags: ['CAD', '3D Printing', 'Arduino', 'Mechatronics'],
-    image: 'robotic-arm.jpg',
+    images: [
+      'robotic-arm/arm-side.jpg',
+      'robotic-arm/mounted.jpg',
+    ],
   },
   {
     id: 'cycloidal-gearbox',
@@ -63,7 +75,7 @@ export const projects: Project[] = [
     description:
       'Designed a cycloidal drive gearbox for compact high-reduction actuation in robotics applications. Full CAD, tolerance analysis, and prototype validation.',
     tags: ['CAD', 'Siemens NX', 'Mechanical Design', '3D Printing'],
-    image: 'cycloidal-gearbox.jpg',
+    images: ['cycloidal-gearbox/hero.jpg'],
   },
 
   // --- Mechanical Design & Controls ---
@@ -75,7 +87,7 @@ export const projects: Project[] = [
     description:
       'Senior capstone: a fully automated vertical magazine dispenser with escapement/indexer, lead screw lift, and NEMA 23 stepper actuation. End-to-end design, fabrication, and control.',
     tags: ['CAD', 'Mechatronics', 'Stepper Control', 'Capstone'],
-    image: 'capstone-dispenser.jpg',
+    images: ['capstone-dispenser.jpg'],
   },
   {
     id: 'beamng-ros2',
@@ -85,7 +97,7 @@ export const projects: Project[] = [
     description:
       'Implemented feedforward + PI speed controllers for a vehicle in BeamNG.tech using ROS 2. Used PlotJuggler for log analysis and controller tuning.',
     tags: ['ROS 2', 'Python', 'Control Systems', 'PlotJuggler'],
-    image: 'beamng-ros2.jpg',
+    images: ['beamng-ros2.jpg'],
   },
   {
     id: 'leaf-vacuum',
@@ -96,7 +108,7 @@ export const projects: Project[] = [
     description:
       'Award-winning 3D-printed yard-cleaning robot with tracked chassis, two motors, and vacuum system controlled by Arduino. Recognized as Best IED Project at RPI — recognized two years running.',
     tags: ['Siemens NX', '3D Printing', 'Arduino', 'Team Project'],
-    image: 'leaf-vacuum.jpg',
+    images: ['leaf-vacuum/hero.jpg'],
   },
   {
     id: 'heartbeat-sensor',
@@ -106,7 +118,7 @@ export const projects: Project[] = [
     description:
       'Analog circuit with amplifiers and filters to detect heartbeats in the 60–180 bpm range. Signal conditioning and noise rejection from first principles.',
     tags: ['Analog Circuits', 'Signal Processing', 'Electronics'],
-    image: 'heartbeat-sensor.jpg',
+    images: ['heartbeat-sensor.jpg'],
   },
 
   // --- Software & Maker ---
@@ -119,7 +131,7 @@ export const projects: Project[] = [
     description:
       'Desk gadget on an ESP32-S3 SuperMini that shows real-time Anthropic and OpenAI API spend on a 2" ST7789 IPS LCD. EC11 encoder UI, 24-hour sparkline, budget bar, and direct calls to each platform\u2019s Admin API — built with PlatformIO and custom display rendering.',
     tags: ['ESP32-S3', 'C++', 'PlatformIO', 'SPI Display', 'REST API'],
-    image: 'tokenjar.jpg',
+    images: ['tokenjar.jpg'],
     github: 'https://github.com/Zhaor3/tokenjar',
     featured: true,
   },
@@ -130,9 +142,9 @@ export const projects: Project[] = [
     date: 'Personal Project',
     context: 'AI / System Design',
     description:
-      'Trading-research framework where 11 specialized LLM agents debate, challenge, and stress-test every trade through a 6-phase pipeline (data → analyst team → bull/bear debate → trader → risk stress-test → portfolio manager). Delivers a full trade dashboard and price-prediction chart to Telegram.',
+      'Trading-research framework where 11 specialized LLM agents debate, challenge, and stress-test every trade through a 6-phase pipeline (data \u2192 analyst team \u2192 bull/bear debate \u2192 trader \u2192 risk stress-test \u2192 portfolio manager). Delivers a full trade dashboard and price-prediction chart to Telegram.',
     tags: ['Python', 'Claude', 'GPT-5', 'Multi-Agent', 'Telegram'],
-    image: 'daytradeagents.jpg',
+    images: ['daytradeagents.jpg'],
     github: 'https://github.com/Zhaor3/DayTradeAgents',
   },
   {
@@ -144,7 +156,7 @@ export const projects: Project[] = [
     description:
       'Determines where a photo was taken using a 6-stage pipeline: EXIF extraction, two-pass visual analysis with extended thinking, hypothesis generation, self-verification, external tool verification (Google Places, reverse geocoding), and final scoring. CLI plus Telegram bot.',
     tags: ['Python', 'Claude Vision', 'Computer Vision', 'Reasoning'],
-    image: 'geoagent.jpg',
+    images: ['geoagent.jpg'],
     github: 'https://github.com/Zhaor3/GeoAgent',
   },
   {
@@ -155,7 +167,7 @@ export const projects: Project[] = [
     description:
       'Self-assembled two Vorons from scratch for high-speed, high-quality printing. Customized G-code, upgraded a Voron 2.4 with a carbon fiber gantry and metal components, and designed custom camera and LED mounts in CAD.',
     tags: ['Voron', 'G-code', 'CAD', 'Hardware'],
-    image: 'voron.jpg',
+    images: ['voron.jpg'],
   },
 ];
 
