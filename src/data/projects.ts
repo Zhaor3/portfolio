@@ -54,6 +54,16 @@ export const projects: Project[] = [
     ],
   },
   {
+    id: 'cycloidal-gearbox',
+    title: 'Cycloidal Drive Gearbox (NEMA 17)',
+    category: 'Robotics & Autonomous Systems',
+    date: 'Aug 2024 – Jan 2025',
+    description:
+      'Designed a cycloidal drive gearbox for compact high-reduction actuation in robotics applications. Full CAD, tolerance analysis, and prototype validation.',
+    tags: ['CAD', 'Siemens NX', 'Mechanical Design', '3D Printing'],
+    images: ['cycloidal-gearbox/hero.jpg'],
+  },
+  {
     id: 'robotic-arm-4dof',
     title: '4-DOF Robotic Arm',
     category: 'Robotics & Autonomous Systems',
@@ -66,16 +76,7 @@ export const projects: Project[] = [
       'robotic-arm/arm-side.jpg',
       'robotic-arm/mounted.jpg',
     ],
-  },
-  {
-    id: 'cycloidal-gearbox',
-    title: 'Cycloidal Drive Gearbox (NEMA 17)',
-    category: 'Robotics & Autonomous Systems',
-    date: 'Aug 2024 – Jan 2025',
-    description:
-      'Designed a cycloidal drive gearbox for compact high-reduction actuation in robotics applications. Full CAD, tolerance analysis, and prototype validation.',
-    tags: ['CAD', 'Siemens NX', 'Mechanical Design', '3D Printing'],
-    images: ['cycloidal-gearbox/hero.jpg'],
+    featured: true,
   },
 
   // --- Mechanical Design & Controls ---
@@ -120,6 +121,7 @@ export const projects: Project[] = [
       'Award-winning 3D-printed yard-cleaning robot with tracked chassis, two motors, and vacuum system controlled by Arduino. Recognized as Best IED Project at RPI — recognized two years running.',
     tags: ['Siemens NX', '3D Printing', 'Arduino', 'Team Project'],
     images: ['leaf-vacuum/hero.jpg'],
+    featured: true,
   },
   {
     id: 'heartbeat-sensor',

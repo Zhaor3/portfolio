@@ -3,15 +3,24 @@
 import { motion } from 'framer-motion';
 import { Briefcase, MapPin } from 'lucide-react';
 import SectionHeader from './SectionHeader';
+import SectionWatermark from './SectionWatermark';
 import { experience } from '@/data/experience';
 import { fadeUp, stagger } from '@/lib/motion';
 
 export default function Experience() {
   return (
-    <section id="experience" className="relative z-10 px-6 py-24 md:py-32 max-w-6xl mx-auto">
+    <section
+      id="experience"
+      className="relative z-10 px-6 py-24 md:py-32 max-w-6xl mx-auto overflow-hidden"
+    >
+      <SectionWatermark text="field" corner="bottom-right" />
+
+      <div className="relative">
       <SectionHeader
         eyebrow="Experience"
         title="Research, internships, and teams."
+        index={3}
+        total={7}
       />
 
       <div className="relative">
@@ -86,6 +95,7 @@ export default function Experience() {
             </motion.article>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

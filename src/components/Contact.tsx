@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Mail, Phone, Linkedin, Github, Instagram, ArrowUpRight } from 'lucide-react';
 import SectionHeader from './SectionHeader';
+import SectionWatermark from './SectionWatermark';
 import { reveal } from '@/lib/motion';
 
 const channels = [
@@ -40,11 +41,20 @@ const channels = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="relative z-10 px-6 py-24 md:py-32 max-w-5xl mx-auto">
+    <section
+      id="contact"
+      className="relative z-10 px-6 py-24 md:py-32 max-w-5xl mx-auto overflow-hidden"
+    >
+      <SectionWatermark text="hello" corner="bottom-left" fontSize="clamp(12rem, 24vw, 30rem)" />
+
+      <div className="relative">
       <SectionHeader
         eyebrow="Get in touch"
         title="Let's build something."
         subtitle="Open to Summer 2026 internship conversations, research chats, and anything else at the intersection of mechanics, controls, and intelligent systems."
+        index={7}
+        total={7}
+        align="center"
       />
 
       <motion.div
@@ -72,6 +82,7 @@ export default function Contact() {
           ))}
         </div>
       </motion.div>
+      </div>
     </section>
   );
 }

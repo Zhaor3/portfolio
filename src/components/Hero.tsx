@@ -1,22 +1,62 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Download } from 'lucide-react';
 import { withBase } from '@/lib/paths';
+import SectionWatermark from './SectionWatermark';
 
 export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start'],
+  });
+
+  // Watermark has a very light scroll-linked drift — content is left alone
+  // so the scroll feel stays predictable (no "stuck during fade" sensation).
+  const watermarkY = useTransform(scrollYProgress, [0, 1], ['0%', '-8%']);
+
   return (
     <section
+      ref={ref}
       id="hero"
-      className="relative z-10 min-h-screen flex items-center justify-center px-6 pt-24"
+      className="relative z-10 min-h-[88vh] flex items-center justify-center px-6 pt-20 pb-16 overflow-hidden"
     >
-      <div className="max-w-5xl w-full text-center">
+      {/* Cropped italic watermark — surname echo in the lower-left margin */}
+      <motion.div style={{ y: watermarkY }} className="absolute inset-0 pointer-events-none">
+        <SectionWatermark
+          text="Zhao"
+          corner="bottom-left"
+          fontSize="clamp(8rem, 16vw, 18rem)"
+          strokeAlpha={0.04}
+        />
+      </motion.div>
+
+      <div className="relative max-w-5xl w-full text-center">
+        {/* Eyebrow — matches Featured / section-header language */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8 flex items-center justify-center gap-3"
+        >
+          <span className="font-mono text-[11px] tracking-[0.3em] text-[#86868b] uppercase">
+            §&nbsp;Index
+          </span>
+          <span className="h-px w-12 bg-black/15" />
+          <span className="font-mono text-[11px] tracking-[0.3em] text-[#86868b] tabular-nums">
+            00 / 07
+          </span>
+        </motion.div>
+
         {/* Status pill */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 mb-10 text-sm rounded-full glass"
+          className="inline-flex items-center gap-2 px-4 py-1.5 mb-10 text-sm rounded-full glass mx-auto"
+          data-cursor="expand"
         >
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
@@ -25,7 +65,7 @@ export default function Hero() {
           <span className="text-[#1d1d1f]">Seeking Summer 2026 Internship</span>
         </motion.div>
 
-        {/* Headline */}
+        {/* Headline — letter-by-letter reveal on first render */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,8 +73,23 @@ export default function Hero() {
           className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.75rem] font-semibold tracking-[-0.035em] mb-6 leading-[1.02]"
         >
           <span className="text-[#1d1d1f]">Hi, I&apos;m </span>
-          <span className="text-aura">Ruoxiang Zhao</span>
+          <motion.span
+            className="text-aura inline-block"
+            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Ruoxiang Zhao
+          </motion.span>
         </motion.h1>
+
+        {/* Gradient hairline under headline — matches SectionHeader underscore */}
+        <motion.div
+          initial={{ scaleX: 0, originX: 0.5 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.1, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto mb-8 h-px w-48 bg-gradient-to-r from-transparent via-[#6366f1] to-transparent"
+        />
 
         {/* Tagline */}
         <motion.p
@@ -72,6 +127,7 @@ export default function Hero() {
           <a
             href="#projects"
             className="group w-full sm:w-auto btn-primary px-7 py-3.5 rounded-full font-medium flex items-center justify-center gap-2 min-w-[180px]"
+            data-cursor="expand"
           >
             View Projects
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -81,13 +137,14 @@ export default function Hero() {
             target="_blank"
             rel="noopener"
             className="group w-full sm:w-auto btn-ghost px-7 py-3.5 rounded-full font-medium flex items-center justify-center gap-2 min-w-[180px]"
+            data-cursor="expand"
           >
             <Download className="w-4 h-4" />
             Download Resume
           </a>
         </motion.div>
 
-        {/* Quick stats row — adds more personality and detail */}
+        {/* Quick stats row */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -112,19 +169,19 @@ export default function Hero() {
           ))}
         </motion.div>
 
-        {/* Scroll hint — hidden on small screens */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
-          className="hidden md:block absolute bottom-10 left-1/2 -translate-x-1/2"
-        >
-          <div className="flex flex-col items-center gap-2 text-[#86868b]">
-            <span className="text-[10px] tracking-[0.25em] uppercase">Scroll</span>
-            <div className="w-px h-10 bg-gradient-to-b from-[#86868b]/60 to-transparent" />
-          </div>
-        </motion.div>
       </div>
+
+      {/* Scroll hint — hidden on small screens, pinned to section bottom */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1 }}
+        className="hidden md:flex absolute bottom-5 left-1/2 -translate-x-1/2 flex-col items-center gap-1.5 text-[#86868b] pointer-events-none"
+      >
+        <span className="text-[10px] tracking-[0.25em] uppercase">Scroll</span>
+        <div className="w-px h-6 bg-gradient-to-b from-[#86868b]/60 to-transparent" />
+      </motion.div>
     </section>
   );
 }
+

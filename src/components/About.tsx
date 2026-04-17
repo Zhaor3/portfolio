@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion';
 import { Download } from 'lucide-react';
 import SectionHeader from './SectionHeader';
+import SectionWatermark from './SectionWatermark';
+import AmbientMarquee from './AmbientMarquee';
 import { featuredSkills, skillGroups } from '@/data/skills';
 import { withBase } from '@/lib/paths';
 import { reveal } from '@/lib/motion';
@@ -15,10 +17,18 @@ const bio = [
 
 export default function About() {
   return (
-    <section id="about" className="relative z-10 px-6 py-24 md:py-32 max-w-6xl mx-auto">
+    <section
+      id="about"
+      className="relative z-10 px-6 py-24 md:py-32 max-w-6xl mx-auto overflow-hidden"
+    >
+      <SectionWatermark text="about" corner="bottom-right" />
+
+      <div className="relative">
       <SectionHeader
         eyebrow="About"
         title="Mechanics, controls, and intelligent systems."
+        index={1}
+        total={7}
       />
 
       <div className="grid lg:grid-cols-5 gap-10 lg:gap-16">
@@ -96,6 +106,12 @@ export default function About() {
           ))}
         </div>
       </motion.div>
+
+      <AmbientMarquee
+        serif="CAD · Test · Build · Ship · Learn · Iterate · Refine · Question ·"
+        mono="sketch · simulate · prototype · measure · refine ·"
+      />
+      </div>
     </section>
   );
 }

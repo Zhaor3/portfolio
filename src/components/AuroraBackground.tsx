@@ -1,82 +1,196 @@
 'use client';
 
 /**
- * Aura Glass background — soft pastel washes that give the page atmosphere
- * without shouting. Each blob sits below 35% alpha so typography stays crisp.
+ * Site-wide atmospheric base layer.
  *
- * Palette inspired by 2026 portfolio trends: soft lavender, sky blue, mint, and
- * peach — a "hybrid" where flat white is the base and the aurora is the accent.
+ * Art direction: **engineering paper**. Warm off-white ground with a
+ * few restrained indigo/lavender washes and scattered drafting
+ * construction geometry. Paired with GlobalBlueprint (drafting chrome)
+ * and GlobalCursor (ink-bleed pool), this is the bottom layer of a
+ * three-layer atmosphere.
+ *
+ * Scroll behavior: each atmospheric layer parallaxes at a different
+ * rate so the whole page feels "in motion" when you scroll. Guarded
+ * by useReducedMotion — if the user prefers reduced motion we skip
+ * the parallax entirely.
  */
+
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+
 export default function AuroraBackground() {
+  const reduce = useReducedMotion();
+  const { scrollY } = useScroll();
+
+  // Each layer moves at a different rate — deepest (smallest translation)
+  // layers feel "farther away." Null transforms on reduce so the browser
+  // skips the compositing work entirely.
+  const y1 = useTransform(scrollY, [0, 4000], [0, -220]);
+  const y2 = useTransform(scrollY, [0, 4000], [0, -140]);
+  const y3 = useTransform(scrollY, [0, 4000], [0, -340]);
+  const y4 = useTransform(scrollY, [0, 4000], [0, -180]);
+  const y5 = useTransform(scrollY, [0, 4000], [0, -260]);
+  const geomY = useTransform(scrollY, [0, 4000], [0, -120]);
+  const geomRot = useTransform(scrollY, [0, 4000], [0, 12]);
+
   return (
     <div
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-      style={{ background: '#f7f8fc' }}
+      style={{ background: '#f7f6f2' }}
     >
-      {/* Soft base gradient — warm top-left, cool bottom-right */}
+      {/* Paper warmth — faint cream graded across the sheet */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 90% 60% at 15% 0%, rgba(255,240,235,0.7) 0%, rgba(255,240,235,0) 60%), radial-gradient(ellipse 80% 70% at 100% 100%, rgba(230,235,255,0.6) 0%, rgba(230,235,255,0) 65%)',
+            'radial-gradient(ellipse 120% 80% at 15% -10%, rgba(255,248,235,0.55) 0%, rgba(255,248,235,0) 55%), radial-gradient(ellipse 100% 90% at 110% 110%, rgba(235,238,250,0.6) 0%, rgba(235,238,250,0) 60%)',
         }}
       />
 
-      {/* Pastel aurora blobs — lavender, sky, mint, peach */}
-      <div
-        className="absolute -top-32 -left-32 h-[760px] w-[760px] rounded-full animate-aurora-1"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(196, 181, 253, 0.45) 0%, rgba(196, 181, 253, 0) 65%)',
-          filter: 'blur(40px)',
-        }}
-      />
-      <div
-        className="absolute top-[-10%] right-[-15%] h-[820px] w-[820px] rounded-full animate-aurora-2"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(147, 197, 253, 0.38) 0%, rgba(147, 197, 253, 0) 65%)',
-          filter: 'blur(50px)',
-        }}
-      />
-      <div
-        className="absolute top-[30%] left-[35%] h-[640px] w-[640px] rounded-full animate-aurora-3"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(167, 243, 208, 0.32) 0%, rgba(167, 243, 208, 0) 65%)',
-          filter: 'blur(44px)',
-        }}
-      />
-      <div
-        className="absolute bottom-[-15%] right-[5%] h-[720px] w-[720px] rounded-full animate-aurora-4"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(253, 186, 186, 0.34) 0%, rgba(253, 186, 186, 0) 65%)',
-          filter: 'blur(50px)',
-        }}
-      />
-      <div
-        className="absolute bottom-[15%] left-[-10%] h-[580px] w-[580px] rounded-full animate-aurora-2"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(221, 214, 254, 0.4) 0%, rgba(221, 214, 254, 0) 65%)',
-          filter: 'blur(44px)',
-          animationDelay: '-10s',
-        }}
-      />
+      {/* Lavender/indigo wash — top-left, drifts up fastest */}
+      <motion.div
+        style={{ y: reduce ? 0 : y1 }}
+        className="absolute -top-40 -left-40 h-[880px] w-[880px] rounded-full animate-aurora-1"
+      >
+        <div
+          className="h-full w-full rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(196,190,255,0.28) 0%, rgba(196,190,255,0) 62%)',
+            filter: 'blur(60px)',
+            mixBlendMode: 'multiply',
+          }}
+        />
+      </motion.div>
 
-      {/* Subtle grain to break up banding */}
+      {/* Slate-violet wash — right side, slower drift */}
+      <motion.div
+        style={{ y: reduce ? 0 : y2 }}
+        className="absolute top-[-8%] right-[-20%] h-[920px] w-[920px] rounded-full animate-aurora-2"
+      >
+        <div
+          className="h-full w-full rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(180,185,220,0.30) 0%, rgba(180,185,220,0) 62%)',
+            filter: 'blur(70px)',
+            mixBlendMode: 'multiply',
+          }}
+        />
+      </motion.div>
+
+      {/* Cool slate mid-plate — anchors the middle, deepest layer */}
+      <motion.div
+        style={{ y: reduce ? 0 : y3 }}
+        className="absolute top-[35%] left-[30%] h-[700px] w-[700px] rounded-full animate-aurora-3"
+      >
+        <div
+          className="h-full w-full rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(205,210,230,0.24) 0%, rgba(205,210,230,0) 65%)',
+            filter: 'blur(55px)',
+            mixBlendMode: 'multiply',
+          }}
+        />
+      </motion.div>
+
+      {/* Warm lower-right — pulls the eye down-page */}
+      <motion.div
+        style={{ y: reduce ? 0 : y4 }}
+        className="absolute bottom-[-15%] right-[3%] h-[760px] w-[760px] rounded-full animate-aurora-4"
+      >
+        <div
+          className="h-full w-full rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(230,220,200,0.25) 0%, rgba(230,220,200,0) 62%)',
+            filter: 'blur(60px)',
+            mixBlendMode: 'multiply',
+          }}
+        />
+      </motion.div>
+
+      {/* Indigo accent — small, low-left */}
+      <motion.div
+        style={{ y: reduce ? 0 : y5 }}
+        className="absolute bottom-[18%] left-[-8%] h-[560px] w-[560px] rounded-full animate-aurora-2"
+      >
+        <div
+          className="h-full w-full rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(155,165,235,0.22) 0%, rgba(155,165,235,0) 62%)',
+            filter: 'blur(55px)',
+            mixBlendMode: 'multiply',
+            animationDelay: '-12s',
+          }}
+        />
+      </motion.div>
+
+      {/* Scattered construction geometry — slow scroll drift + tiny rotation */}
+      <motion.svg
+        aria-hidden
+        style={{ y: reduce ? 0 : geomY, rotate: reduce ? 0 : geomRot }}
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
+        <g
+          style={{
+            opacity: 0.09,
+            maskImage:
+              'radial-gradient(ellipse 75% 65% at 50% 45%, black, transparent 90%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 75% 65% at 50% 45%, black, transparent 90%)',
+          }}
+        >
+          <g fill="none" stroke="rgba(15,15,25,1)" strokeWidth="0.08" vectorEffect="non-scaling-stroke">
+            <circle cx="18" cy="22" r="14" />
+            <circle cx="18" cy="22" r="8" strokeDasharray="0.4 0.6" />
+            <circle cx="82" cy="18" r="11" />
+            <circle cx="88" cy="54" r="9" />
+            <circle cx="88" cy="54" r="4.5" />
+            <circle cx="14" cy="78" r="10" />
+            <circle cx="14" cy="78" r="5" strokeDasharray="0.4 0.6" />
+            <circle cx="78" cy="86" r="13" />
+          </g>
+          <g stroke="rgba(15,15,25,1)" strokeWidth="0.08" vectorEffect="non-scaling-stroke">
+            {[
+              [50, 8],
+              [38, 42],
+              [62, 68],
+              [26, 58],
+              [72, 34],
+              [48, 92],
+              [6, 48],
+              [94, 78],
+            ].map(([cx, cy], i) => (
+              <g key={i} transform={`translate(${cx} ${cy})`}>
+                <line x1="-1.4" y1="0" x2="1.4" y2="0" />
+                <line x1="0" y1="-1.4" x2="0" y2="1.4" />
+              </g>
+            ))}
+          </g>
+          <g fill="rgba(99,102,241,0.45)">
+            <circle cx="18" cy="22" r="0.35" />
+            <circle cx="88" cy="54" r="0.35" />
+            <circle cx="14" cy="78" r="0.35" />
+          </g>
+        </g>
+      </motion.svg>
+
+      {/* Grain — breaks up gradient banding, near-invisible */}
       <div
-        className="absolute inset-0 opacity-[0.03] mix-blend-multiply"
+        className="absolute inset-0 opacity-[0.035] mix-blend-multiply"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
         }}
       />
 
-      {/* Light vignette — keeps edges slightly darker for focus */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(230,230,240,0.4)_100%)]" />
+      {/* Vignette — keeps edges slightly darker so the center reads focus */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(210,208,200,0.45)_100%)]" />
     </div>
   );
 }

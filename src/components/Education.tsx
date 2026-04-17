@@ -9,7 +9,12 @@ import { fadeUp, stagger } from '@/lib/motion';
 export default function Education() {
   return (
     <section id="education" className="relative z-10 px-6 py-24 md:py-32 max-w-6xl mx-auto">
-      <SectionHeader eyebrow="Education" title="Where I've learned." />
+      <SectionHeader
+        eyebrow="Education"
+        title="Where I've learned."
+        index={2}
+        total={7}
+      />
 
       <div className="space-y-5">
         {education.map((edu, i) => (
