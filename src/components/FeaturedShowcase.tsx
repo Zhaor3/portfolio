@@ -68,7 +68,7 @@ const items: ShowcaseItem[] = [
     title: 'TokenJar',
     description:
       'ESP32-S3 desk gadget showing live Anthropic + OpenAI spend on a 2" IPS LCD.',
-    image: 'tokenjar/screen-1-processed.png',
+    image: 'tokenjar/hero.png',
     meta: ['ESP32-S3', 'C++', 'REST'],
     href: '#projects',
   },
