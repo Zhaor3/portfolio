@@ -1,178 +1,302 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import SectionHeader from './SectionHeader';
-import SectionWatermark from './SectionWatermark';
-import AmbientMarquee from './AmbientMarquee';
-import ProjectCard from './ProjectCard';
-import { projects, projectCategories, type ProjectCategory } from '@/data/projects';
-import { fadeUp } from '@/lib/motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowDownRight, ArrowUpRight, Github } from 'lucide-react';
+import ImageCarousel from './ImageCarousel';
+import { projects, type Project, type ProjectCategory } from '@/data/projects';
 
-const categoryMeta: Record<ProjectCategory, { numeral: string; caption: string }> = {
-  'Robotics & Autonomous Systems': {
-    numeral: 'I',
-    caption: 'Closed-loop control, actuation, and embedded sensing.',
+type MediaSpec = {
+  image?: string;
+  fit?: 'cover' | 'contain';
+  fitByImage?: Partial<Record<string, 'cover' | 'contain'>>;
+  frame?: 'paper' | 'dark';
+  blurredBackdrop?: boolean;
+};
+
+type CategorySpec = {
+  category: ProjectCategory;
+  number: string;
+  title: string;
+  description: string;
+  projectIds: string[];
+};
+
+const categorySpecs: CategorySpec[] = [
+  {
+    category: 'Robotics & Autonomous Systems',
+    number: '01',
+    title: 'Robotics + autonomy',
+    description:
+      'Vehicle systems, sensing, actuation, and compact robotic mechanisms.',
+    projectIds: [
+      'canam-brake',
+      'robotic-arm-4dof',
+      'canam-wheel-speed',
+      'cycloidal-gearbox',
+    ],
   },
-  'Mechanical Design & Controls': {
-    numeral: 'II',
-    caption: 'Mechanisms, capstone, and award-winning team builds.',
+  {
+    category: 'Mechanical Design & Controls',
+    number: '02',
+    title: 'Mechanisms + controls',
+    description:
+      'Mechanisms, control systems, circuits, and validated physical prototypes.',
+    projectIds: [
+      'capstone-dispenser',
+      'beamng-ros2',
+      'leaf-vacuum',
+      'heartbeat-sensor',
+    ],
   },
-  'Software & Maker': {
-    numeral: 'III',
-    caption: 'Hardware-adjacent code and personal fabrication.',
+  {
+    category: 'Software & Maker',
+    number: '03',
+    title: 'Software + making',
+    description:
+      'Embedded products, fabrication systems, vision, and agentic software.',
+    projectIds: [
+      'tokenjar',
+      'voron-3d-printers',
+      'geoagent',
+      'daytradeagents',
+    ],
+  },
+];
+
+const mediaSpecs: Record<string, MediaSpec> = {
+  'canam-brake': {
+    image: 'canam-brake/actuator-installed.jpg',
+    fitByImage: {
+      'canam-brake/hero.jpg': 'contain',
+    },
+    blurredBackdrop: true,
+  },
+  'robotic-arm-4dof': {
+    image: 'robotic-arm/arm-side.jpg',
+  },
+  'canam-wheel-speed': {
+    image: 'canam-wheel-speed/sensor-parts.jpg',
+    fit: 'contain',
+    frame: 'paper',
+    blurredBackdrop: true,
+  },
+  'cycloidal-gearbox': {
+    image: 'cycloidal-gearbox/hero.jpg',
+  },
+  'capstone-dispenser': {
+    image: 'capstone-dispenser/dashboard.png',
+    fit: 'contain',
+    frame: 'paper',
+  },
+  'beamng-ros2': {
+    image: 'beamng-ros2/sim-plotjuggler.webp',
+    fit: 'contain',
+    frame: 'dark',
+  },
+  'leaf-vacuum': {
+    image: 'leaf-vacuum/hero.jpg',
+  },
+  'heartbeat-sensor': {
+    image: 'heartbeat-sensor/hero.jpg',
+  },
+  tokenjar: {
+    image: 'tokenjar/hero.webp',
+    fit: 'contain',
+    frame: 'dark',
+  },
+  'voron-3d-printers': {
+    image: 'voron/voron-2.jpg',
+    fit: 'contain',
+    frame: 'paper',
+    blurredBackdrop: true,
+  },
+  geoagent: {
+    image: 'geoagent/pipeline-processed.png',
+    fit: 'contain',
+    frame: 'dark',
+  },
+  daytradeagents: {
+    image: 'daytradeagents/chart_preview.png',
+    fit: 'contain',
+    frame: 'dark',
   },
 };
 
-/* Small drafting reticle — echoes AuroraBackground construction geometry. */
-function Reticle() {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 40 40"
-      className="w-8 h-8 md:w-10 md:h-10 shrink-0 text-[#1d1d1f]/55"
-      fill="none"
-    >
-      <circle cx="20" cy="20" r="14" stroke="currentColor" strokeWidth="0.6" />
-      <circle
-        cx="20"
-        cy="20"
-        r="8"
-        stroke="currentColor"
-        strokeWidth="0.6"
-        strokeDasharray="1 1.5"
-      />
-      <line x1="20" y1="2" x2="20" y2="8" stroke="currentColor" strokeWidth="0.6" />
-      <line x1="20" y1="32" x2="20" y2="38" stroke="currentColor" strokeWidth="0.6" />
-      <line x1="2" y1="20" x2="8" y2="20" stroke="currentColor" strokeWidth="0.6" />
-      <line x1="32" y1="20" x2="38" y2="20" stroke="currentColor" strokeWidth="0.6" />
-      <circle cx="20" cy="20" r="0.9" fill="#6366f1" />
-    </svg>
-  );
-}
+function ProjectCard({
+  project,
+  index,
+}: {
+  project: Project;
+  index: number;
+}) {
+  const reduceMotion = useReducedMotion();
+  const media = mediaSpecs[project.id] ?? {};
+  const preferredImage = media.image ?? project.images[0];
+  const orderedImages = project.images.includes(preferredImage)
+    ? [
+        preferredImage,
+        ...project.images.filter((image) => image !== preferredImage),
+      ]
+    : project.images;
 
-/* Fold-marker row — drafting "cut here" between categories. */
-function FoldMarker({ label }: { label: string }) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, amount: 0.6 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="flex items-center gap-4 px-2"
-      aria-hidden
+    <motion.article
+      id={`project-${project.id}`}
+      initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12, margin: '0px 0px -35px 0px' }}
+      transition={{
+        duration: 0.58,
+        delay: Math.min((index % 2) * 0.06, 0.06),
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      className="group flex h-full scroll-mt-24 flex-col overflow-hidden rounded-[1.4rem] border border-black/10 bg-[var(--surface)] transition-colors duration-300 hover:border-black/20"
     >
-      <span className="font-mono text-[10px] tracking-[0.35em] uppercase text-[#86868b]">
-        §&nbsp;Fold
-      </span>
-      <span
-        className="flex-1 h-px"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(to right, rgba(15,15,25,0.25) 0 6px, transparent 6px 12px)',
-        }}
+      <ImageCarousel
+        images={orderedImages}
+        alt={project.title}
+        className="aspect-[4/3] w-full border-b border-black/10"
+        fit={media.fit}
+        fitByImage={media.fitByImage}
+        frame={media.frame}
+        blurredBackdrop={media.blurredBackdrop}
       />
-      <span className="font-mono text-[10px] tracking-[0.35em] uppercase text-[#86868b] tabular-nums">
-        {label}
-      </span>
-    </motion.div>
+
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--muted)]">
+          <span>{project.context ?? project.category}</span>
+          <span>{project.date}</span>
+        </div>
+
+        <h4 className="mt-4 text-xl font-semibold leading-tight tracking-[-0.025em] text-[var(--ink)] sm:text-2xl">
+          {project.title}
+        </h4>
+        <p className="mt-3 text-sm font-medium leading-relaxed text-[var(--ink)]/80 sm:text-[15px]">
+          {project.outcome ?? project.description}
+        </p>
+
+        {project.role && (
+          <div className="mt-5 border-t border-black/10 pt-4 text-xs leading-relaxed text-[var(--muted)] sm:text-sm">
+            <span className="mr-2 font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+              Role
+            </span>
+            {project.role}
+          </div>
+        )}
+
+        <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
+          {project.tags.slice(0, 3).map((tag, tagIndex) => (
+            <span
+              key={tag}
+              className={`rounded-full border border-black/10 px-2.5 py-1 text-[10px] text-[var(--muted)] ${
+                tagIndex === 2 ? 'hidden sm:inline-flex' : 'inline-flex'
+              }`}
+            >
+              {tag}
+            </span>
+          ))}
+
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-full px-2 text-xs font-medium text-[var(--ink)] transition-colors hover:text-[var(--accent-strong)]"
+              aria-label={`View ${project.title} repository`}
+            >
+              <Github className="h-3.5 w-3.5" aria-hidden />
+              Repository
+              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.article>
   );
 }
 
 export default function Projects() {
-  const activeCategories = projectCategories.filter(
-    (c) => projects.filter((p) => p.category === c).length > 0,
-  );
-
   return (
     <section
       id="projects"
-      className="relative z-10 px-6 py-24 md:py-32 max-w-7xl mx-auto overflow-hidden"
+      className="relative z-10 scroll-mt-16 px-6 py-24 md:py-32"
     >
-      <SectionWatermark text="projects" corner="bottom-right" />
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-7 border-t border-black/10 pt-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.55fr)] lg:items-end lg:gap-16">
+          <div>
+            <p className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--muted)]">
+              <span className="text-[var(--accent-strong)]">04 / 06</span>
+              Projects
+            </p>
+            <h2 className="mt-5 max-w-4xl text-[clamp(2.8rem,5vw,5.5rem)] font-medium leading-[0.94] tracking-[-0.055em] text-[var(--ink)]">
+              Selected engineering work
+            </h2>
+          </div>
+          <p className="max-w-xl text-sm leading-relaxed text-[var(--muted)] sm:text-base">
+            Twelve projects organized by discipline. Each card shows ownership
+            and outcome. Swipe or select either image edge to browse; select
+            the center to enlarge.
+          </p>
+        </div>
 
-      {/* Corner drafting reticle — upper-right ornament */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-24 right-6 md:top-28 md:right-10 opacity-60"
-      >
-        <Reticle />
-      </div>
+        <div className="mt-16 space-y-20 md:mt-20 md:space-y-24 lg:space-y-28">
+          {categorySpecs.map((categorySpec) => {
+            const categoryProjects = categorySpec.projectIds
+              .map((id) => projects.find((project) => project.id === id))
+              .filter((project): project is Project => Boolean(project));
 
-      <div className="relative">
-        <SectionHeader
-          eyebrow="Selected Work"
-          title="Projects."
-          subtitle="A mix of research, capstone, coursework, and personal builds across robotics, mechanical design, and software."
-          index={5}
-          total={7}
-        />
-
-        <div className="space-y-16 md:space-y-20">
-          {activeCategories.map((category, catIdx) => {
-            const items = projects.filter((p) => p.category === category);
-            const meta = categoryMeta[category];
             return (
-              <div key={category}>
-                {/* Fold marker between categories (not before the first) */}
-                {catIdx > 0 && (
-                  <div className="mb-12 md:mb-16">
-                    <FoldMarker
-                      label={`${String(catIdx).padStart(2, '0')} / ${String(
-                        activeCategories.length,
-                      ).padStart(2, '0')}`}
+              <section
+                key={categorySpec.category}
+                aria-labelledby={`category-${categorySpec.number}`}
+                className="grid gap-8 border-t border-black/10 pt-6 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[14rem_minmax(0,1fr)] xl:gap-14"
+              >
+                <div className="lg:sticky lg:top-24 lg:self-start">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[var(--accent-strong)]">
+                    {categorySpec.number} / 03
+                  </p>
+                  <h3
+                    id={`category-${categorySpec.number}`}
+                    className="mt-3 text-2xl font-semibold tracking-[-0.025em] text-[var(--ink)]"
+                  >
+                    {categorySpec.title}
+                  </h3>
+                  <p className="mt-3 max-w-xs text-sm leading-relaxed text-[var(--muted)]">
+                    {categorySpec.description}
+                  </p>
+                  <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--muted)]">
+                    {categoryProjects.length} projects
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 md:gap-x-6 md:gap-y-10">
+                  {categoryProjects.map((project, index) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      index={index}
                     />
-                  </div>
-                )}
-
-                {/* Category header — numeral + title + caption + reticle */}
-                <motion.div
-                  {...fadeUp({ amount: 0.5, y: 16, duration: 0.6 })}
-                  className="mb-8 md:mb-10"
-                >
-                  <div className="flex items-start gap-4 md:gap-5">
-                    <Reticle />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <span className="font-mono text-[11px] tracking-[0.35em] uppercase text-[#86868b]">
-                          §&nbsp;{meta.numeral}
-                        </span>
-                        <h3 className="text-base md:text-lg font-semibold tracking-tight text-[#1d1d1f]">
-                          {category}
-                        </h3>
-                        <span className="font-mono text-[11px] text-[#86868b] tabular-nums ml-auto">
-                          {String(items.length).padStart(2, '0')} pc
-                        </span>
-                      </div>
-                      <p className="text-sm text-[#6e6e73] mt-1.5 max-w-xl">{meta.caption}</p>
-                      <div
-                        className="mt-3 h-px"
-                        style={{
-                          backgroundImage:
-                            'linear-gradient(to right, rgba(99,102,241,0.35), rgba(15,15,25,0.12) 40%, transparent 90%)',
-                        }}
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Bento grid — featured items span 2 of 3 cols, crossing small ↔ large */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 auto-rows-fr">
-                  {items.map((p, i) => (
-                    <div key={p.id} className={p.featured ? 'lg:col-span-2' : ''}>
-                      <ProjectCard project={p} index={catIdx * 4 + i} />
-                    </div>
                   ))}
                 </div>
-              </div>
+              </section>
             );
           })}
         </div>
 
-        <AmbientMarquee
-          serif="Research · Hardware · Software · Build · Test · Iterate · Ship ·"
-          mono="design · fabricate · simulate · validate · document ·"
-        />
+        <div className="mt-20 flex justify-end border-t border-black/10 pt-5 md:mt-24">
+          <a
+            href="#vehicles"
+            className="group inline-flex min-h-11 items-center gap-2 text-sm font-medium text-[var(--ink)]"
+          >
+            Continue to the garage
+            <ArrowDownRight
+              className="h-4 w-4 text-[var(--accent)] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0.5"
+              aria-hidden
+            />
+          </a>
+        </div>
       </div>
+
     </section>
   );
 }

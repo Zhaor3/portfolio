@@ -11,9 +11,9 @@ export default function Education() {
     <section id="education" className="relative z-10 px-6 py-24 md:py-32 max-w-6xl mx-auto">
       <SectionHeader
         eyebrow="Education"
-        title="Where I've learned."
+        title="Where I've learned"
         index={2}
-        total={7}
+        total={6}
       />
 
       <div className="space-y-5">
@@ -35,11 +35,11 @@ export default function Education() {
                   </h3>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     {edu.status === 'incoming' && (
-                      <span className="text-[10px] font-medium tracking-widest uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 border border-emerald-500/20">
+                      <span className="rounded-full border border-[var(--accent)]/25 bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-widest text-[var(--accent-strong)]">
                         Incoming
                       </span>
                     )}
-                    <span className="text-xs md:text-sm text-[#86868b] whitespace-nowrap">
+                    <span className="text-xs md:text-sm text-[#66666c] whitespace-nowrap">
                       {edu.date}
                     </span>
                   </div>
@@ -48,7 +48,7 @@ export default function Education() {
 
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
                   {edu.location && (
-                    <span className="inline-flex items-center gap-1.5 text-[#86868b]">
+                    <span className="inline-flex items-center gap-1.5 text-[#66666c]">
                       <MapPin className="w-3.5 h-3.5" />
                       {edu.location}
                     </span>
@@ -62,13 +62,13 @@ export default function Education() {
 
                 {edu.honors && (
                   <p className="mt-3 text-sm text-[#1d1d1f]/80">
-                    <span className="text-[#86868b]">Honors — </span>
+                    <span className="text-[#66666c]">Honors — </span>
                     {edu.honors}
                   </p>
                 )}
                 {edu.activities && edu.activities.length > 0 && (
                   <p className="mt-1 text-sm text-[#1d1d1f]/80">
-                    <span className="text-[#86868b]">Activities — </span>
+                    <span className="text-[#66666c]">Activities — </span>
                     {edu.activities.join(' · ')}
                   </p>
                 )}

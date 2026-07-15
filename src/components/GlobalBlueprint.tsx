@@ -22,7 +22,7 @@ export default function GlobalBlueprint() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-0"
+      className="pointer-events-none fixed inset-0 z-0 hidden md:block"
       style={{ contain: 'strict' }}
     >
       <svg
@@ -71,17 +71,6 @@ export default function GlobalBlueprint() {
           >
             § PORTFOLIO · R. ZHAO · 2026 · REV A
           </text>
-          <text
-            x="1400"
-            y="894"
-            textAnchor="end"
-            fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-            fontSize="9"
-            fill="rgba(15,15,25,0.30)"
-            letterSpacing="0.25em"
-          >
-            SHEET 01 / 01
-          </text>
         </g>
 
         {/* Four corner reticles */}
@@ -97,53 +86,6 @@ export default function GlobalBlueprint() {
             <circle cx="10" cy="10" r="3" stroke={HAIR} strokeWidth="0.4" fill="none" />
           </g>
         ))}
-
-        {/* Tiny title block (bottom-right) */}
-        <g transform="translate(1260 836)">
-          <rect x="0" y="0" width="140" height="30" stroke={HAIR_SOFT} strokeWidth="0.5" fill="none" />
-          <line x1="0" y1="15" x2="140" y2="15" stroke={HAIR_SOFT} strokeWidth="0.4" />
-          <line x1="70" y1="0" x2="70" y2="30" stroke={HAIR_SOFT} strokeWidth="0.4" />
-          <text
-            x="6"
-            y="11"
-            fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-            fontSize="7"
-            fill="rgba(15,15,25,0.30)"
-            letterSpacing="0.25em"
-          >
-            SCALE
-          </text>
-          <text
-            x="76"
-            y="11"
-            fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-            fontSize="7"
-            fill="rgba(15,15,25,0.30)"
-            letterSpacing="0.25em"
-          >
-            1 : 1
-          </text>
-          <text
-            x="6"
-            y="26"
-            fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-            fontSize="7"
-            fill="rgba(15,15,25,0.30)"
-            letterSpacing="0.25em"
-          >
-            UNIT
-          </text>
-          <text
-            x="76"
-            y="26"
-            fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
-            fontSize="7"
-            fill="rgba(15,15,25,0.30)"
-            letterSpacing="0.25em"
-          >
-            MM
-          </text>
-        </g>
 
         {/* Left-edge vertical tick strip */}
         <g>

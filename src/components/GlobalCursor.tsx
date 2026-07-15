@@ -41,7 +41,7 @@ export default function GlobalCursor() {
   const springInkX = useSpring(inkX, { stiffness: 90, damping: 22, mass: 0.8 });
   const springInkY = useSpring(inkY, { stiffness: 90, damping: 22, mass: 0.8 });
 
-  const inkBg = useMotionTemplate`radial-gradient(420px circle at ${springInkX}px ${springInkY}px, rgba(99,102,241,0.10), rgba(99,102,241,0.035) 45%, transparent 75%)`;
+  const inkBg = useMotionTemplate`radial-gradient(320px circle at ${springInkX}px ${springInkY}px, rgba(99,102,241,0.065), rgba(99,102,241,0.02) 45%, transparent 75%)`;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

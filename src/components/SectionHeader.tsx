@@ -47,7 +47,7 @@ export default function SectionHeader({
   return (
     <motion.div
       {...reveal({ amount: 0.4 })}
-      className={`mb-14 md:mb-20 ${isCenter ? 'text-center' : 'text-left'}`}
+      className={`mb-12 md:mb-16 ${isCenter ? 'text-center' : 'text-left'}`}
     >
       {(eyebrow || showCounter) && (
         <div
@@ -56,20 +56,20 @@ export default function SectionHeader({
           }`}
         >
           {eyebrow && (
-            <span className="font-mono text-[11px] tracking-[0.3em] text-[#86868b] uppercase">
+            <span className="font-mono text-[11px] tracking-[0.3em] text-[#66666c] uppercase">
               §&nbsp;{eyebrow}
             </span>
           )}
           <span className="h-px w-12 bg-black/15" />
           {showCounter && (
-            <span className="font-mono text-[11px] tracking-[0.3em] text-[#86868b] tabular-nums">
+            <span className="font-mono text-[11px] tracking-[0.3em] text-[#66666c] tabular-nums">
               {String(index).padStart(2, '0')} / {String(total).padStart(2, '0')}
             </span>
           )}
           {status && (
             <>
               <span className="hidden md:block h-px w-8 bg-black/15" />
-              <span className="hidden md:inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.25em] text-[#86868b] uppercase">
+              <span className="hidden md:inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.25em] text-[#66666c] uppercase">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 {status}
               </span>
@@ -90,9 +90,9 @@ export default function SectionHeader({
       <motion.div
         initial={{ scaleX: 0, originX: isCenter ? 0.5 : 0 }}
         whileInView={{ scaleX: 1 }}
-        viewport={{ once: false, amount: 0.5 }}
-        transition={{ duration: 1.2, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className={`mt-6 h-px w-48 bg-gradient-to-r from-[#1d1d1f] via-[#6366f1] to-transparent ${
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className={`mt-6 h-px w-48 bg-gradient-to-r from-[var(--ink)] via-[var(--accent)] to-transparent ${
           isCenter ? 'mx-auto' : ''
         }`}
       />

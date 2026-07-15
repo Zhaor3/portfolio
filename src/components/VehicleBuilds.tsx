@@ -13,7 +13,6 @@ import SectionHeader from './SectionHeader';
 import PlaceholderImage from './PlaceholderImage';
 import ImageCarousel from './ImageCarousel';
 import SectionWatermark from './SectionWatermark';
-import AmbientMarquee from './AmbientMarquee';
 import { vehicles } from '@/data/vehicles';
 import { fadeUp, stagger } from '@/lib/motion';
 
@@ -83,10 +82,10 @@ function VehicleCard({
         className="pointer-events-none absolute inset-0 z-[5] transition-opacity duration-300"
         style={{
           opacity: spot.visible ? 1 : 0,
-          background: `radial-gradient(320px circle at ${spot.x}% ${spot.y}%, rgba(99,102,241,0.14), rgba(99,102,241,0.04) 35%, transparent 65%)`,
+          background: `radial-gradient(320px circle at ${spot.x}% ${spot.y}%, rgba(228,91,50,0.12), rgba(228,91,50,0.035) 35%, transparent 65%)`,
         }}
       />
-      <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-[#6366f1]/0 group-hover:ring-[#6366f1]/20 transition z-[6]" />
+      <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-[var(--accent)]/0 group-hover:ring-[var(--accent)]/20 transition z-[6]" />
 
       <div style={{ transform: 'translateZ(20px)' }}>
         <div className="relative">
@@ -114,7 +113,7 @@ function VehicleCard({
           <h3 className="text-lg font-semibold tracking-tight text-[#1d1d1f] mb-1">
             {v.name}
           </h3>
-          <p className="text-xs text-[#86868b] mb-2 uppercase tracking-widest">
+          <p className="text-xs text-[#66666c] mb-2 uppercase tracking-widest">
             {v.period}
           </p>
           <p className="text-sm text-[#6e6e73] leading-relaxed">{v.notes}</p>
@@ -135,22 +134,18 @@ export default function VehicleBuilds() {
       <div className="relative">
         <SectionHeader
           eyebrow="The Garage"
-          title="Cars I've built, broken, and loved."
-          subtitle="Personal builds and daily drivers. Wrenching on cars is how I got into mechanical engineering in the first place."
-          index={6}
-          total={7}
+          title="Cars I've built, broken, and loved"
+          subtitle="Personal builds and daily drivers. Wrenching on cars is how I got into mechanical engineering in the first place"
+          index={5}
+          total={6}
         />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
           {vehicles.map((v, i) => (
             <VehicleCard key={v.id} v={v} i={i} />
           ))}
         </div>
 
-        <AmbientMarquee
-          serif="Wrench · Tune · Drive · Track · Rebuild · Tinker · Repeat ·"
-          mono="bolt · torque · tune · test · repeat ·"
-        />
       </div>
     </section>
   );

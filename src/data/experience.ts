@@ -8,35 +8,28 @@ export type Experience = {
   skills?: string[];
 };
 
-// Manually ordered to surface the roles that matter most to recruiters first:
-//   1. current research role (XAL)
-//   2. Tesla internship (featured — highest-signal completed role)
-//   3. other ongoing roles (RSAS)
-//   4. other completed roles (Formula SAE)
+// Manually ordered to surface the current role first, followed by the most
+// relevant completed engineering, research, and leadership experience.
 export const experience: Experience[] = [
   {
-    role: 'Undergraduate Research Assistant',
-    company: 'XAL Research Lab · Rensselaer Polytechnic Institute',
-    location: 'Troy, NY',
-    date: 'Feb 2025 – Present',
+    role: 'Robotics Engineering Intern, Dexterous Hand R&D',
+    company: 'Stella Robotics',
+    location: 'Remote',
+    date: 'Jul 2026 – Aug 2026',
     summary:
-      'Contributing to autonomous-vehicle research under Prof. Franck Djeumou, including the Can-Am X3 project presented to Toyota Research Institute.',
+      'Sole structural designer of a hollow-bore, tendon-routed 3-DoF robotic wrist for a humanoid dexterous hand, combining 2-DoF wrist pitch/yaw with a wrist-linked thumb-adduction axis for high thumb force in a compact package.',
     details: [
-      'Designing a self-driving Can-Am X3 focused on achieving stable control under slipping conditions.',
-      'Developing autonomous braking, steering, and sensor subsystems for the vehicle.',
-      'Using MATLAB and Simulink to model, simulate, and optimize control strategies.',
-      'Designing custom mechanical components for autonomous systems via CAD and 3D printing.',
-      'Exploring vehicle dynamics, control algorithms, and AI-based navigation.',
+      'Designing the central tendon pass-through—routing paths, guides, and anchors—to keep cables pinch-free with stable tension while verifying clearance and interference across the full range of motion.',
+      'Quantifying tendon-length change versus wrist pose through multi-pose motion simulation and mechanics calculations.',
+      'Delivering complete 3D CAD, 2D production drawings, and a simulation report on a five-week cycle.',
     ],
     skills: [
-      'ROS 2',
-      'Python',
-      'MATLAB',
-      'Simulink',
-      'Vehicle Dynamics',
-      'Control Systems',
-      'Rapid Prototyping',
+      'Mechanical Design',
       'Robotics',
+      'CAD',
+      'Motion Simulation',
+      'Engineering Drawings',
+      'Tendon-Driven Mechanisms',
     ],
   },
   {
@@ -55,15 +48,37 @@ export const experience: Experience[] = [
     skills: ['Siemens NX', 'CAD', 'Thermal Simulation', 'DFM', 'Mechanical Engineering'],
   },
   {
+    role: 'Undergraduate Researcher, Autonomous Vehicles',
+    company: 'XAL Research Lab · Rensselaer Polytechnic Institute',
+    location: 'Troy, NY',
+    date: 'Feb 2025 – May 2026',
+    summary:
+      'Developed autonomous braking, steering, and wheel-speed sensing systems for a self-driving Can-Am X3 focused on stable control under slipping conditions; presented the work to Toyota Research Institute.',
+    details: [
+      'Built brake-automation, steering, and encoder-based wheel-speed sensing subsystems using ROS 2 and Python.',
+      'Modeled vehicle dynamics and tuned control strategies in MATLAB and Simulink.',
+      'Designed and 3D-printed custom actuator and sensor mounts for the autonomy retrofit.',
+    ],
+    skills: [
+      'ROS 2',
+      'Python',
+      'MATLAB',
+      'Simulink',
+      'Vehicle Dynamics',
+      'Control Systems',
+      'Rapid Prototyping',
+    ],
+  },
+  {
     role: 'Shop Manager',
     company: 'Rensselaer Student Auto Shop (RSAS)',
     location: 'Troy, NY',
-    date: 'Sep 2022 – Present',
+    date: 'Sep 2022 – May 2026',
     summary:
-      'Manage weekly operations of a student-run auto shop and provide hands-on support for student vehicle work.',
+      'Ran weekly operations for a student-run auto shop and provided hands-on support for student vehicle work.',
     details: [
-      'Maintain a safe, organized environment for students doing maintenance, modification, and repair.',
-      'Provide hands-on technical support across a wide range of vehicle systems.',
+      'Maintained a safe, organized environment for students performing maintenance, modification, and repair.',
+      'Provided hands-on technical support across a wide range of vehicle systems.',
     ],
     skills: ['Mechanical Engineering', 'Vehicle Maintenance', 'Leadership'],
   },

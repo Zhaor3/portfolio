@@ -6,14 +6,10 @@
  * the same feel, and so the spec can be upgraded in one place.
  *
  * Design goals:
- * - **Re-triggers on every scroll** (`once: false`) — users expect the
- *   animation to play each time an element crosses the viewport, not just
- *   the first time. A one-shot reveal feels dead on re-scroll.
- * - **Blur → sharp** — blur-to-focus is the dominant 2025/2026 portfolio
- *   reveal pattern (see: Linear, Vercel, Framer, Apple product pages). It
- *   adds perceived depth that pure opacity+y can't.
- * - **Subtle scale** — 0.96 → 1. Cards feel like they're settling into
- *   place rather than flying in. Pairs well with the blur.
+ * - **One-shot reveals** keep the page calm and immediately scannable on
+ *   return scrolls.
+ * - **Directional movement** makes the interface feel intentional without
+ *   repaint-heavy blur filters or repetitive card scaling.
  * - **Expo-out easing** — `[0.16, 1, 0.3, 1]` decelerates fast, giving a
  *   "snap into place" feel without being abrupt.
  */
@@ -38,8 +34,7 @@ type RevealOpts = {
 };
 
 /**
- * Standard reveal: blur → sharp, soft lift, subtle scale.
- * Re-triggers every time the element crosses the viewport.
+ * Standard reveal: short lift with a fast editorial settle.
  *
  * @example
  *   <motion.div {...reveal()}>            // basic
@@ -50,15 +45,15 @@ export function reveal(opts: RevealOpts = {}) {
   const {
     delay = 0,
     amount = 0.2,
-    y = 36,
-    duration = 0.85,
+    y = 24,
+    duration = 0.7,
     ease = EXPO_OUT,
   } = opts;
 
   return {
-    initial: { opacity: 0, y, scale: 0.96, filter: 'blur(10px)' },
-    whileInView: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
-    viewport: { once: false, amount, margin: '0px 0px -60px 0px' },
+    initial: { opacity: 0, y },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount, margin: '0px 0px -40px 0px' },
     transition: {
       duration,
       delay,
@@ -76,14 +71,14 @@ export function fadeUp(opts: RevealOpts = {}) {
     delay = 0,
     amount = 0.3,
     y = 20,
-    duration = 0.7,
+    duration = 0.6,
     ease = EXPO_OUT,
   } = opts;
 
   return {
     initial: { opacity: 0, y },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: false, amount, margin: '0px 0px -40px 0px' },
+    viewport: { once: true, amount, margin: '0px 0px -30px 0px' },
     transition: {
       duration,
       delay,
@@ -111,7 +106,7 @@ export function stagger(index: number, step = 0.08, cap = 0.4): number {
  * trigger to cascade into multiple children without per-child delay math.
  *
  * @example
- *   <motion.ul variants={staggerParent} initial="hidden" whileInView="visible" viewport={{ once: false, amount: 0.3 }}>
+ *   <motion.ul variants={staggerParent} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
  *     {items.map(item => <motion.li key={item.id} variants={childVariants} />)}
  *   </motion.ul>
  */
@@ -126,14 +121,12 @@ export const staggerParent: Variants = {
 };
 
 export const childVariants: Variants = {
-  hidden: { opacity: 0, y: 28, scale: 0.96, filter: 'blur(8px)' },
+  hidden: { opacity: 0, y: 22 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    filter: 'blur(0px)',
     transition: {
-      duration: 0.8,
+      duration: 0.65,
       ease: EXPO_OUT as unknown as number[],
     },
   },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import Lightbox from './Lightbox';
 
 type Props = {
@@ -27,6 +27,7 @@ export default function PlaceholderImage({ src, alt, label, className = '' }: Pr
   const [failed, setFailed] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   // Track scroll progress from "element enters bottom of viewport" (0) to
   // "element leaves top of viewport" (1). Mapping that into a ±6% y offset
@@ -46,28 +47,36 @@ export default function PlaceholderImage({ src, alt, label, className = '' }: Pr
       className={`relative overflow-hidden ${className}`}
       style={{
         background:
-          'linear-gradient(135deg, #f5f5f7 0%, #e8e9ed 50%, #dfe1e7 100%)',
+          'linear-gradient(135deg, #f6f4ee 0%, #e8e5dd 50%, #dcd8cf 100%)',
       }}
     >
       {!failed && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <motion.img
-          src={resolvedSrc}
-          alt={alt}
-          loading="lazy"
-          onError={() => setFailed(true)}
+        <button
+          type="button"
+          aria-label={`Open ${alt} in image viewer`}
           onClick={(e) => {
-            e.preventDefault();
             e.stopPropagation();
+            e.currentTarget.focus();
             setLightboxOpen(true);
           }}
-          style={{ y, scale: 1.12 }}
-          className="absolute inset-0 h-full w-full object-cover cursor-zoom-in"
-        />
+          className="absolute inset-0 block h-full w-full cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-inset"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <motion.img
+            src={resolvedSrc}
+            alt={alt}
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+            onError={() => setFailed(true)}
+            style={{ y: reduceMotion ? 0 : y, scale: 1.12 }}
+            className="h-full w-full object-cover"
+          />
+        </button>
       )}
       {failed && (
         <div className="absolute inset-0 flex items-center justify-center p-4">
-          <span className="text-[#86868b] text-[10px] md:text-xs tracking-[0.3em] uppercase text-center">
+          <span className="text-[#66666c] text-[10px] md:text-xs tracking-[0.3em] uppercase text-center">
             {label ?? alt}
           </span>
         </div>

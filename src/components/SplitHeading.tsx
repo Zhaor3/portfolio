@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Word-level heading reveal with blur→sharp lift.
+ * Word-level heading reveal with a short editorial lift.
  *
  * Previously split by character, which made headings slow to resolve
  * and let per-character inline-blocks break mid-word at narrow widths.
@@ -27,12 +27,12 @@ export default function SplitHeading({
       {words.map((word, i) => (
         <span key={i} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
           <motion.span
-            initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
-            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            viewport={{ once: false, amount: 0.4, margin: '0px 0px -40px 0px' }}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4, margin: '0px 0px -30px 0px' }}
             transition={{
-              duration: 0.5,
-              delay: i * 0.08,
+              duration: 0.45,
+              delay: i * 0.055,
               ease: [0.16, 1, 0.3, 1],
             }}
             style={{ display: 'inline-block' }}

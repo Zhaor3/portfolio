@@ -18,16 +18,16 @@ export default function Experience() {
       <div className="relative">
       <SectionHeader
         eyebrow="Experience"
-        title="Research, internships, and teams."
+        title="Research, internships, and teams"
         index={3}
-        total={7}
+        total={6}
       />
 
       <div className="relative">
         {/* Vertical rail */}
         <div
           aria-hidden
-          className="absolute left-[19px] md:left-[23px] top-2 bottom-2 w-px bg-black/10"
+          className="absolute left-[19px] top-2 bottom-2 hidden w-px bg-black/10 sm:block md:left-[23px]"
         />
 
         <div className="space-y-6">
@@ -35,10 +35,10 @@ export default function Experience() {
             <motion.article
               key={`${exp.company}-${exp.role}`}
               {...fadeUp({ delay: stagger(i), amount: 0.25 })}
-              className="relative pl-12 md:pl-16"
+              className="relative sm:pl-12 md:pl-16"
             >
               {/* Dot */}
-              <div className="absolute left-0 top-1 w-10 h-10 md:w-12 md:h-12 rounded-full glass flex items-center justify-center">
+              <div className="absolute left-0 top-1 hidden h-10 w-10 items-center justify-center rounded-full glass sm:flex md:h-12 md:w-12">
                 <Briefcase className="w-4 h-4 md:w-[18px] md:h-[18px] text-[#1d1d1f]" />
               </div>
 
@@ -51,11 +51,11 @@ export default function Experience() {
                     <p className="text-[#6e6e73] mt-0.5">{exp.company}</p>
                   </div>
                   <div className="flex flex-col items-start md:items-end gap-1">
-                    <span className="text-xs md:text-sm text-[#86868b] whitespace-nowrap">
+                    <span className="text-xs md:text-sm text-[#66666c] whitespace-nowrap">
                       {exp.date}
                     </span>
                     {exp.location && (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-[#86868b]">
+                      <span className="inline-flex items-center gap-1.5 text-xs text-[#66666c]">
                         <MapPin className="w-3 h-3" />
                         {exp.location}
                       </span>
@@ -72,7 +72,7 @@ export default function Experience() {
                         key={idx}
                         className="text-sm text-[#6e6e73] pl-4 relative leading-relaxed"
                       >
-                        <span className="absolute left-0 top-[0.6em] w-1 h-1 rounded-full bg-[#86868b]" />
+                        <span className="absolute left-0 top-[0.6em] w-1 h-1 rounded-full bg-[#66666c]" />
                         {d}
                       </li>
                     ))}

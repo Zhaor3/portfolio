@@ -52,13 +52,13 @@ const items: ShowcaseItem[] = [
     id: 'canam-brake',
     number: '01',
     label: 'RESEARCH',
-    date: '2025 — XAL LAB',
+    date: '2025–26 — XAL LAB',
     title: 'Can-Am X3 Brake Automation',
     description:
       'Closed-loop brake automation for autonomous control under slipping conditions. Presented to Toyota Research Institute.',
     image: 'canam-brake/hero.jpg',
     meta: ['ROS 2', 'Python', 'Mechatronics', 'Vehicle Dynamics'],
-    href: '#projects',
+    href: '#project-canam-brake',
   },
   {
     id: 'tokenjar',
@@ -68,9 +68,9 @@ const items: ShowcaseItem[] = [
     title: 'TokenJar',
     description:
       'ESP32-S3 desk gadget showing live Anthropic + OpenAI spend on a 2" IPS LCD.',
-    image: 'tokenjar/hero.png',
+    image: 'tokenjar/hero.webp',
     meta: ['ESP32-S3', 'C++', 'REST'],
-    href: '#projects',
+    href: '#project-tokenjar',
   },
   {
     id: 'daytradeagents',
@@ -82,7 +82,7 @@ const items: ShowcaseItem[] = [
       'Eleven LLM agents debate trades through a six-phase research pipeline.',
     image: 'daytradeagents/banner.png',
     meta: ['Multi-Agent', 'Claude', 'Python'],
-    href: '#projects',
+    href: '#project-daytradeagents',
   },
 ];
 
@@ -163,14 +163,12 @@ function ShowcaseCard({
   const [spot, setSpot] = useState({ x: 50, y: 50, visible: false });
 
   function handleMove(e: ReactMouseEvent<HTMLDivElement>) {
-    if (!ref.current) return;
+    if (reduce || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const nx = (e.clientX - rect.left) / rect.width - 0.5;
     const ny = (e.clientY - rect.top) / rect.height - 0.5;
-    if (!reduce) {
-      mx.set(nx);
-      my.set(ny);
-    }
+    mx.set(nx);
+    my.set(ny);
     setSpot({
       x: ((e.clientX - rect.left) / rect.width) * 100,
       y: ((e.clientY - rect.top) / rect.height) * 100,
@@ -208,6 +206,7 @@ function ShowcaseCard({
           alt={item.title}
           className="h-full w-full object-cover scale-[1.08] group-hover:scale-[1.14] transition-transform duration-[900ms] ease-out"
           loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/35 to-transparent" />
       </div>
@@ -271,7 +270,7 @@ function ShowcaseCard({
                 href={item.href}
                 className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-medium text-[#1d1d1f] shadow-[0_8px_24px_-8px_rgba(0,0,0,0.45)] hover:bg-white/95 transition-colors"
               >
-                Explore
+                View details
                 <ArrowUpRight className="h-4 w-4" />
               </MagneticLink>
             </div>
@@ -732,6 +731,7 @@ export default function FeaturedShowcase() {
 
   const mxNorm = useMotionValue(0);
   const myNorm = useMotionValue(0);
+  const stillY = useMotionValue('0%');
 
   useEffect(() => {
     if (reduce) return;
@@ -787,7 +787,10 @@ export default function FeaturedShowcase() {
       <BlueprintBackground />
 
       {/* 2 — Ghost watermark (massive outlined "motion" cropped off corner) */}
-      <motion.div style={{ x: watermarkX }} className="absolute inset-0 pointer-events-none">
+      <motion.div
+        style={{ x: reduce ? 0 : watermarkX }}
+        className="absolute inset-0 pointer-events-none"
+      >
         <GhostWatermark />
       </motion.div>
 
@@ -795,27 +798,45 @@ export default function FeaturedShowcase() {
       <FloatingShapes mx={mxNorm} my={myNorm} />
 
       <div className="relative mx-auto max-w-7xl">
-        <motion.div style={{ y: headingY, opacity: headingOpacity, filter: headingBlur }}>
+        <motion.div
+          style={{
+            y: reduce ? 0 : headingY,
+            opacity: reduce ? 1 : headingOpacity,
+            filter: reduce ? 'none' : headingBlur,
+          }}
+        >
           <SectionHeader
             eyebrow="Featured"
-            title="In motion."
-            subtitle="A slow camera pass over the work that's currently on the bench — research, hardware, and software in active rotation."
-            index={4}
+            title="Selected work"
+            subtitle="Three projects that show how I move from engineering problem to working system"
+            index={1}
             total={7}
-            status="Live · 2026.04"
+            status="3 case studies"
           />
         </motion.div>
 
         {/* Bento */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 auto-rows-fr">
           <div className="md:col-span-2 md:row-span-2 min-h-[420px] md:min-h-[580px]">
-            <ShowcaseCard item={items[0]} variant="large" parallaxY={cardHeroY} />
+            <ShowcaseCard
+              item={items[0]}
+              variant="large"
+              parallaxY={reduce ? stillY : cardHeroY}
+            />
           </div>
           <div className="min-h-[240px] md:min-h-[282px]">
-            <ShowcaseCard item={items[1]} variant="small" parallaxY={cardAY} />
+            <ShowcaseCard
+              item={items[1]}
+              variant="small"
+              parallaxY={reduce ? stillY : cardAY}
+            />
           </div>
           <div className="min-h-[240px] md:min-h-[282px]">
-            <ShowcaseCard item={items[2]} variant="small" parallaxY={cardBY} />
+            <ShowcaseCard
+              item={items[2]}
+              variant="small"
+              parallaxY={reduce ? stillY : cardBY}
+            />
           </div>
         </div>
 

@@ -4,7 +4,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="relative z-10 px-6 pt-16 pb-12 max-w-7xl mx-auto">
-      <div className="border-t border-black/10 pt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[#86868b]">
+      <div className="border-t border-black/10 pt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[#66666c]">
         <p>© {year} Ruoxiang Zhao · Built with Next.js & Tailwind.</p>
         <p>
           <a

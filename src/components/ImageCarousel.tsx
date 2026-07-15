@@ -1,142 +1,352 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+} from 'react';
+import { useReducedMotion } from 'framer-motion';
 import Lightbox from './Lightbox';
+
+type ImageFit = 'cover' | 'contain';
+type Frame = 'neutral' | 'paper' | 'dark';
+type InteractionZone = 'previous' | 'view' | 'next' | null;
 
 type Props = {
   images: string[];
   alt: string;
   className?: string;
+  fit?: ImageFit;
+  fitByImage?: Partial<Record<string, ImageFit>>;
+  frame?: Frame;
+  blurredBackdrop?: boolean;
+};
+
+const frameClasses: Record<Frame, string> = {
+  neutral: 'bg-[#d8d5cd]',
+  paper: 'bg-[#e5e1d8]',
+  dark: 'bg-[#191a17]',
 };
 
 /**
- * Horizontal image carousel with CSS scroll-snap for native-feeling swipe.
- *
- * - Touch/trackpad swipe works out of the box via scroll-snap.
- * - Dot indicators appear only when there are multiple images.
- * - Subtle arrow overlays on hover (desktop).
- * - Falls back to the soft gradient placeholder when an image fails.
+ * Arrowless inline gallery: swipe, click/tap either edge to browse, or select
+ * the center to enlarge. Keyboard users can browse with Left/Right and open
+ * the active image with Enter or Space.
  */
-export default function ImageCarousel({ images, alt, className = '' }: Props) {
+export default function ImageCarousel({
+  images,
+  alt,
+  className = '',
+  fit = 'cover',
+  fitByImage,
+  frame = 'neutral',
+  blurredBackdrop = false,
+}: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
+  const suppressClickRef = useRef(false);
+  const pulseTimerRef = useRef<number | null>(null);
   const [active, setActive] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [hoverZone, setHoverZone] = useState<InteractionZone>(null);
+  const [edgePulse, setEdgePulse] = useState<'previous' | 'next' | null>(null);
+  const reduceMotion = useReducedMotion();
   const count = images.length;
-
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
-  // Derive active index from scroll position
+  const resolveImage = useCallback(
+    (image: string) =>
+      image.startsWith('http') ? image : `${basePath}/images/${image}`,
+    [basePath],
+  );
+
   const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el || el.clientWidth === 0) return;
-    const idx = Math.round(el.scrollLeft / el.clientWidth);
-    setActive(Math.min(idx, count - 1));
+    const element = scrollRef.current;
+    if (!element || element.clientWidth === 0) return;
+
+    const index = Math.round(element.scrollLeft / element.clientWidth);
+    setActive(Math.max(0, Math.min(index, count - 1)));
   }, [count]);
 
-  // Programmatically scroll to a slide
-  const goTo = useCallback((idx: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollTo({ left: idx * el.clientWidth, behavior: 'smooth' });
-  }, []);
+  const goTo = useCallback(
+    (index: number) => {
+      const element = scrollRef.current;
+      if (!element || count === 0) return;
+
+      const nextIndex = Math.max(0, Math.min(index, count - 1));
+      setActive(nextIndex);
+      element.scrollTo({
+        left: nextIndex * element.clientWidth,
+        behavior: reduceMotion ? 'auto' : 'smooth',
+      });
+    },
+    [count, reduceMotion],
+  );
+
+  useEffect(
+    () => () => {
+      if (pulseTimerRef.current !== null) {
+        window.clearTimeout(pulseTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const showEdgePulse = (direction: 'previous' | 'next') => {
+    if (reduceMotion) return;
+
+    setEdgePulse(direction);
+    if (pulseTimerRef.current !== null) {
+      window.clearTimeout(pulseTimerRef.current);
+    }
+    pulseTimerRef.current = window.setTimeout(() => {
+      setEdgePulse(null);
+      pulseTimerRef.current = null;
+    }, 260);
+  };
+
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.target as Node)) return;
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      if (count > 1) goTo(active - 1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      if (count > 1) goTo(active + 1);
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setLightboxOpen(true);
+    }
+  };
+
+  const getInteractionZone = (
+    clientX: number,
+    element: HTMLDivElement,
+  ): Exclude<InteractionZone, null> => {
+    if (count === 1) return 'view';
+
+    const bounds = element.getBoundingClientRect();
+    const position = (clientX - bounds.left) / bounds.width;
+    if (position < 0.3) return 'previous';
+    if (position > 0.7) return 'next';
+    return 'view';
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.target as Node)) return;
+    if (event.pointerType !== 'mouse') return;
+    setHoverZone(getInteractionZone(event.clientX, event.currentTarget));
+  };
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.target as Node)) return;
+    pointerStartRef.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const handlePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.target as Node)) return;
+    const start = pointerStartRef.current;
+    pointerStartRef.current = null;
+    if (!start) return;
+
+    const distance = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+    if (distance > 10) {
+      suppressClickRef.current = true;
+      window.setTimeout(() => {
+        suppressClickRef.current = false;
+      }, 0);
+    }
+  };
+
+  const handleClick = (event: ReactMouseEvent<HTMLDivElement>) => {
+    // React portal events from the lightbox still bubble through this component.
+    // Only react to clicks whose DOM target is inside the inline gallery itself.
+    if (!event.currentTarget.contains(event.target as Node)) return;
+    if (suppressClickRef.current) return;
+
+    const zone = getInteractionZone(event.clientX, event.currentTarget);
+    if (zone === 'previous') {
+      if (active > 0) {
+        showEdgePulse('previous');
+        goTo(active - 1);
+      }
+    } else if (zone === 'next') {
+      if (active < count - 1) {
+        showEdgePulse('next');
+        goTo(active + 1);
+      }
+    } else {
+      setLightboxOpen(true);
+    }
+  };
+
+  if (count === 0) return null;
 
   return (
-    <div className={`relative group/carousel overflow-hidden ${className}`}>
-      {/* Scrollable track */}
+    <div
+      className={`group/carousel relative overflow-hidden ${frameClasses[frame]} ${className}`}
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={`${alt} image gallery, image ${active + 1} of ${count}. Select either edge to browse or the center to enlarge.`}
+      aria-keyshortcuts="ArrowLeft ArrowRight Enter Space"
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      onClick={handleClick}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={() => {
+        pointerStartRef.current = null;
+      }}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={() => setHoverZone(null)}
+      style={{
+        cursor:
+          hoverZone === 'previous'
+            ? active > 0
+              ? 'w-resize'
+              : 'default'
+            : hoverZone === 'next'
+              ? active < count - 1
+                ? 'e-resize'
+                : 'default'
+              : 'zoom-in',
+      }}
+    >
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex h-full scrollbar-hide"
+        className="scrollbar-hide flex h-full overscroll-x-contain"
         style={{
           overflowX: 'auto',
           scrollSnapType: 'x mandatory',
           WebkitOverflowScrolling: 'touch',
         }}
       >
-        {images.map((img, i) => (
-          <div
-            key={img}
-            className="relative flex-shrink-0 w-full h-full"
-            style={{
-              scrollSnapAlign: 'start',
-              background:
-                'linear-gradient(135deg, #f5f5f7 0%, #e8e9ed 50%, #dfe1e7 100%)',
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={img.startsWith('http') ? img : `${basePath}/images/${img}`}
-              alt={`${alt} — ${i + 1} of ${count}`}
-              loading={i === 0 ? 'eager' : 'lazy'}
-              draggable={false}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setLightboxOpen(true);
-              }}
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = 'none';
-              }}
-              className="absolute inset-0 h-full w-full object-cover select-none cursor-zoom-in"
-            />
+        {images.map((image, index) => {
+          const imageFit = fitByImage?.[image] ?? fit;
+          const source = resolveImage(image);
 
-            {/* Placeholder text shown when image is missing */}
-            <noscript>
-              <span className="absolute inset-0 flex items-center justify-center text-[#86868b] text-[10px] tracking-[0.3em] uppercase">
-                {img}
-              </span>
-            </noscript>
-          </div>
-        ))}
+          return (
+            <div
+              key={`${image}-${index}`}
+              className={`relative h-full w-full flex-shrink-0 overflow-hidden ${frameClasses[frame]}`}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${index + 1} of ${count}`}
+              style={{ scrollSnapAlign: 'start', scrollSnapStop: 'always' }}
+            >
+              {imageFit === 'contain' && blurredBackdrop && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={source}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                  className="absolute inset-[-8%] h-[116%] w-[116%] scale-110 object-cover opacity-25 blur-2xl saturate-75"
+                />
+              )}
+
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={source}
+                alt={`${alt} — ${index + 1} of ${count}`}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                onError={(event) => {
+                  event.currentTarget.style.display = 'none';
+                }}
+                className={`relative z-[1] h-full w-full select-none ${
+                  imageFit === 'contain'
+                    ? 'object-contain p-3 sm:p-4'
+                    : 'object-cover'
+                }`}
+              />
+            </div>
+          );
+        })}
       </div>
 
-      {/* Image counter pill — only for multi-image */}
       {count > 1 && (
-        <div className="absolute top-3 right-3 z-10 px-2 py-0.5 rounded-full bg-black/30 backdrop-blur-sm text-white text-[10px] font-medium tracking-wide tabular-nums">
-          {active + 1} / {count}
+        <div
+          className="pointer-events-none absolute right-3 top-3 z-20 rounded-full bg-black/65 px-2.5 py-1 font-mono text-[9px] tabular-nums tracking-[0.12em] text-white backdrop-blur-md"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {String(active + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
         </div>
       )}
 
-      {/* Dot indicators */}
-      {count > 1 && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              aria-label={`Go to image ${i + 1}`}
-              className={`rounded-full transition-all duration-300 h-[6px] ${
-                i === active
-                  ? 'bg-white w-5 shadow-[0_0_6px_rgba(0,0,0,0.3)]'
-                  : 'bg-white/50 w-[6px] hover:bg-white/80'
-              }`}
-            />
-          ))}
-        </div>
-      )}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-y-0 left-0 z-[9] w-[34%] bg-gradient-to-r from-[var(--accent)]/45 via-[var(--accent)]/10 to-transparent transition-all duration-300 motion-reduce:hidden ${
+          edgePulse === 'previous'
+            ? 'translate-x-0 opacity-100'
+            : '-translate-x-6 opacity-0'
+        }`}
+      />
 
-      {/* Arrow buttons — appear on hover, desktop only */}
-      {count > 1 && active > 0 && (
-        <button
-          onClick={() => goTo(active - 1)}
-          aria-label="Previous image"
-          className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-200 hover:bg-black/40"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-      )}
-      {count > 1 && active < count - 1 && (
-        <button
-          onClick={() => goTo(active + 1)}
-          aria-label="Next image"
-          className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-200 hover:bg-black/40"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
-      )}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-y-0 right-0 z-[9] w-[34%] bg-gradient-to-l from-[var(--accent)]/45 via-[var(--accent)]/10 to-transparent transition-all duration-300 motion-reduce:hidden ${
+          edgePulse === 'next'
+            ? 'translate-x-0 opacity-100'
+            : 'translate-x-6 opacity-0'
+        }`}
+      />
 
-      {/* Full-screen lightbox */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-[30%] bg-gradient-to-r from-black/25 via-black/5 to-transparent transition-opacity duration-200 motion-reduce:transition-none ${
+          hoverZone === 'previous' && active > 0 ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <span
+          className={`absolute left-2.5 top-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-black/45 px-2 py-1 font-mono text-[7px] uppercase tracking-[0.12em] text-white/90 backdrop-blur-sm transition-all duration-200 motion-reduce:transform-none motion-reduce:transition-none ${
+            hoverZone === 'previous' && active > 0
+              ? 'translate-x-0 opacity-100'
+              : '-translate-x-2 opacity-0'
+          }`}
+        >
+          Prev
+        </span>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-200 motion-reduce:transition-none ${
+          hoverZone === 'view' ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <span className="rounded-full border border-white/10 bg-black/45 px-2 py-1 font-mono text-[7px] uppercase tracking-[0.12em] text-white/90 backdrop-blur-sm">
+          Open
+        </span>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-[30%] bg-gradient-to-l from-black/25 via-black/5 to-transparent transition-opacity duration-200 motion-reduce:transition-none ${
+          hoverZone === 'next' && active < count - 1 ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <span
+          className={`absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-black/45 px-2 py-1 font-mono text-[7px] uppercase tracking-[0.12em] text-white/90 backdrop-blur-sm transition-all duration-200 motion-reduce:transform-none motion-reduce:transition-none ${
+            hoverZone === 'next' && active < count - 1
+              ? 'translate-x-0 opacity-100'
+              : 'translate-x-2 opacity-0'
+          }`}
+        >
+          Next
+        </span>
+      </div>
+
       <Lightbox
         images={images}
         alt={alt}
